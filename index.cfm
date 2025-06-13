@@ -14,12 +14,20 @@
         <cfset variables.title = "All Users">
         <cfinclude template="views/users/list.cfm">
     </cfcase>
+    <cfcase value="users-pending">
+        <cfset variables.title = "Pending Users">
+        <cfinclude template="views/users/list.cfm">
+    </cfcase>
     <cfcase value="user-create">
         <cfset variables.title = "Create User">
         <cfinclude template="views/users/form.cfm">
     </cfcase>
     <cfcase value="content-all">
         <cfset variables.title = "All Contents">
+        <cfinclude template="views/content/list.cfm">
+    </cfcase>
+    <cfcase value="content-pending">
+        <cfset variables.title = "Pending Contents">
         <cfinclude template="views/content/list.cfm">
     </cfcase>
     <cfcase value="content-create">

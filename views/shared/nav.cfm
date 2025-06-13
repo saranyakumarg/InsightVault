@@ -12,22 +12,24 @@
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-speedometer"></use>
           </svg> Dashboard</a>
         </li>
-        <li class="nav-group"><a class="nav-link nav-group-toggle" href="##">
-          <svg class="nav-icon">
+        <li class="nav-group <cfif structKeyExists(URL, "page") && url.page == "content-all" || url.page == "content-pending">show</cfif>">
+          <a class="nav-link nav-group-toggle" href="##">
+            <svg class="nav-icon">
               <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-notes"></use>
-            </svg> Contents</a>
+            </svg> Contents
+          </a>
           <ul class="nav-group-items compact">
-            <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=content-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All</a></li>
-            <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=content-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Approval Pending</a></li>
+            <li class="nav-item"><a class="nav-link <cfif structKeyExists(URL, "page") && url.page == "content-all">active</cfif>" href="#application.baseURL#?page=content-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All</a></li>
+            <li class="nav-item"><a class="nav-link <cfif structKeyExists(URL, "page") && url.page == "content-pending">active</cfif>" href="#application.baseURL#?page=content-pending"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Approval Pending</a></li>
           </ul>
         </li>
-        <li class="nav-group"><a class="nav-link nav-group-toggle" href="##">
+        <li class="nav-group <cfif structKeyExists(URL, "page") && url.page == "users-all" || url.page == "users-pending">show</cfif>"><a class="nav-link nav-group-toggle" href="##">
           <svg class="nav-icon">
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-puzzle"></use>
           </svg> Users</a>
           <ul class="nav-group-items compact">
-            <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=users-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All</a></li>
-            <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=users-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Approval Pending</a></li>
+            <li class="nav-item"><a class="nav-link <cfif structKeyExists(URL, "page") && url.page == "users-all">active</cfif>" href="#application.baseURL#?page=users-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All</a></li>
+            <li class="nav-item"><a class="nav-link <cfif structKeyExists(URL, "page") && url.page == "users-pending">active</cfif>" href="#application.baseURL#?page=users-pending"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Approval Pending</a></li>
           </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=category-all">
