@@ -34,6 +34,14 @@
         <cfset variables.title = "View Content">
         <cfinclude template="views/content/view.cfm">
     </cfcase>
+    <cfcase value="tag-all">
+        <cfset variables.title = "All Tags">
+        <cfinclude template="views/tags/list.cfm">
+    </cfcase>
+    <cfcase  value="category-all">
+        <cfset variables.title = "All Categories">
+        <cfinclude template="views/categories/list.cfm">
+    </cfcase>
     <cfcase value="login">
         <cfinclude template="views/auth/login.cfm">
     </cfcase>

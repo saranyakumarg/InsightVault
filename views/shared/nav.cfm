@@ -30,12 +30,12 @@
             <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=users-all"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Approval Pending</a></li>
           </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="charts.html">
+        <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=category-all">
           <svg class="nav-icon">
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-layers"></use>
           </svg> Categories</a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="charts.html">
+        <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=tag-all">
           <svg class="nav-icon">
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-cursor"></use>
           </svg> Tags</a>
