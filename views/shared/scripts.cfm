@@ -16,5 +16,7 @@
     <script src="assets/coreui/node_modules/@coreui/chartjs/dist/js/coreui-chartjs.js"></script>
     <script src="assets/coreui/node_modules/@coreui/utils/dist/umd/index.js"></script>
     <script src="assets/coreui/js/main.js"></script>
+    <script src="assets/coreui/js/toasts.js"></script>
+    <script src="assets/js/main.js"></script>
     <script> 
     </script>

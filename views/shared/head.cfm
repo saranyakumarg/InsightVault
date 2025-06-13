@@ -37,6 +37,7 @@
     <!-- Vendors styles-->
     <link rel="stylesheet" href="assets/coreui/node_modules/simplebar/dist/simplebar.css">
     <link rel="stylesheet" href="assets/coreui/css/vendors/simplebar.css">
+    <link rel="stylesheet" href="assets/css/main.css">
     <!-- Main styles for this application-->
     <link href="assets/coreui/css/style.css" rel="stylesheet">
     <!-- We use those styles to show code examples, you should remove them in your application.-->

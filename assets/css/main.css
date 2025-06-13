@@ -1,0 +1,23 @@
+.search-results {
+    background-color: #212631;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px;
+}
+/* CKEditor */
+.ck-editor__editable {
+    min-height: 120px !important;
+    max-height: 120px !important;
+    background-color: #212631 !important;
+    border: 1px solid #323a49 !important;
+    border-radius: 0.375rem !important;
+}
+.ck.ck-editor {
+    width: 100% !important;
+}
+.ck.ck-toolbar {
+    border: 1px solid #323a49 !important;
+    border-bottom: none !important;
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+}
+/* CKEditor */
