@@ -26,7 +26,7 @@
                     </br>
                     <div class="input-group">
                         <input class="form-control" type="text" id="searchInput" aria-label="Search input" placeholder="Search here..." autocomplete="off">
-                        <button class="btn btn-primary" type="button" id="searchButton" onclick="toggleSearchResults()">
+                        <button class="btn btn-primary" type="button" id="searchButton" onclick="performSearch()">
                             <i class="icon cil-search"></i>
                         </button>
                     </div>
@@ -36,76 +36,12 @@
                                 <i class="icon cil-search me-2"></i>Search Results
                             </h4>
                             <div class="search-stats">
-                                <span class="badge bg-primary rounded-pill" id="resultCount">0 results</span>
+                                <span class="badge bg-primary rounded-pill" id="resultCount">3 results</span>
                             </div>
                         </div>
                         
-                        <div class="list-group search-results-container">
-                            <a href="#" class="list-group-item list-group-item-action p-3 mb-3 rounded shadow-sm hover-lift">
-                                <div class="d-flex w-100 justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h5 class="mb-2 fw-bold text-primary">Getting Started with ColdFusion</h5>
-                                        <div class="mb-2 d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <span class="badge bg-info me-2">Tutorials</span>
-                                                <span class="badge bg-success">Updated 2 days ago</span>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="icon cil-user me-1 text-danger"></i>
-                                                <span class="text-danger">Alan John</span>
-                                            </div>
-                                        </div>
-                                        <p class="mb-2 text-muted">ColdFusion is a powerful web application development platform that enables rapid development of dynamic websites...</p>
-                                        <div class="d-flex align-items-center text-muted small">
-                                            <span class="me-3"><i class="icon cil-eye me-1"></i>1.2k views</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="#" class="list-group-item list-group-item-action p-3 mb-3 rounded shadow-sm hover-lift">
-                                <div class="d-flex w-100 justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h5 class="mb-2 fw-bold text-primary">Advanced Database Techniques</h5>
-                                        <div class="mb-2 d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <span class="badge bg-info me-2">Development</span>
-                                                <span class="badge bg-success">Updated 1 week ago</span>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="icon cil-user me-1 text-danger"></i>
-                                                <span class="text-danger">Ravi Dev</span>
-                                            </div>
-                                        </div>
-                                        <p class="mb-2 text-muted">Learn advanced database optimization and management techniques to improve your application's performance...</p>
-                                        <div class="d-flex align-items-center text-muted small">
-                                            <span class="me-3"><i class="icon cil-eye me-1"></i>2.5k views</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <a href="#" class="list-group-item list-group-item-action p-3 mb-3 rounded shadow-sm hover-lift">
-                                <div class="d-flex w-100 justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h5 class="mb-2 fw-bold text-primary">Security Best Practices</h5>
-                                        <div class="mb-2 d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <span class="badge bg-info me-2">Security</span>
-                                                <span class="badge bg-success">Updated 3 days ago</span>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="icon cil-user me-1 text-danger"></i>
-                                                <span class="text-danger">John Smith</span>
-                                            </div>
-                                        </div>
-                                        <p class="mb-2 text-muted">Essential security measures and best practices for protecting your web applications from common vulnerabilities...</p>
-                                        <div class="d-flex align-items-center text-muted small">
-                                            <span class="me-3"><i class="icon cil-eye me-1"></i>3.1k views</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                        <div class="list-group search-results-container" id="searchResultsContainer">
+                            <!-- Search results will be dynamically inserted here -->
                         </div>
 
                         <div class="text-center mt-4" id="noResults" style="display: none;">

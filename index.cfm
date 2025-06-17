@@ -50,6 +50,9 @@
         <cfset variables.title = "All Categories">
         <cfinclude template="views/categories/list.cfm">
     </cfcase>
+    <cfcase value="full-content">
+        <cfinclude template="views/content/content.cfm">
+    </cfcase>
     <cfcase value="login">
         <cfinclude template="views/auth/login.cfm">
     </cfcase>
