@@ -1,5 +1,5 @@
 -- Create tags table
-CREATE TABLE tags (
+CREATE TABLE IF NOT EXISTS tags (
     tag_id INT AUTO_INCREMENT PRIMARY KEY,
     slug VARCHAR(100) NOT NULL
 );

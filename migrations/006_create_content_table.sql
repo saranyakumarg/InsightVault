@@ -1,5 +1,5 @@
 -- Create content table
-CREATE TABLE contents (
+CREATE TABLE IF NOT EXISTS contents (
     content_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
@@ -10,7 +10,7 @@ CREATE TABLE contents (
     modified_date DATETIME,
     status ENUM('draft', 'published', 'archived') DEFAULT 'draft',
     version_id INT,
-    FOREIGN KEY (author_id) REFERENCES users(id),
+    FOREIGN KEY (author_id) REFERENCES users(user_id),
     FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 

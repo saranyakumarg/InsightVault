@@ -1,5 +1,5 @@
 component persistent="true" table="categories" {
-    property name="category_id" column="category_id" fieldtype="id" generator="native";
-    property name="name" column="name" fieldtype="string";
-    property name="slug" column="slug" fieldtype="string";
+    property name="category_id" column="category_id" type="integer" generator="identity";
+    property name="name" column="name" type="string";
+    property name="slug" column="slug" type="string";
 }

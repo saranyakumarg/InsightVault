@@ -1,6 +1,6 @@
 -- Create entities table
-CREATE TABLE entities (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS entities (
+    entity_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
