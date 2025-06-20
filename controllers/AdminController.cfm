@@ -103,7 +103,7 @@
         if (userData.recordCount > 0) {
             if (form.password == form.repeatPassword) {
                 var userData = {
-                    password: form.password,
+                    password: hmac(form.password, application.secretKey, "HMACSHA256"),
                     registration_token: form.token
                 };
                 var userResponse = variables.userModel.setPassword(userData);

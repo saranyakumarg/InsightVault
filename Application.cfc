@@ -16,6 +16,7 @@ component{
         application.baseUrl = "/myprojects/InsightVault/";
         application.year = Year(Now());
         application.datasource = this.datasource;
+        application.secretKey = "4HTRV7RE43GB";
         return true;
     }
 }
