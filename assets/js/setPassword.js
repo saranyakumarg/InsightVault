@@ -14,10 +14,10 @@ $(document).ready(function() {
             return;
         }
         // check password length
-        // if (formData.password.length < 8) {
-        //     showToast("Password", "Password must be at least 8 characters long", "danger");
-        //     return;
-        // }
+        if (formData.password.length < 8) {
+            showToast("Password", "Password must be at least 8 characters long", "danger");
+            return;
+        }
         // check password contains at least one uppercase letter
         $.ajax({
             url: baseURL + 'controllers/AdminController.cfm?method=setPassword',
