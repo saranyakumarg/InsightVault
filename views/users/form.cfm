@@ -4,7 +4,7 @@
 
     <div class="wrapper d-flex flex-column min-vh-100">
       <cfinclude  template="../shared/header.cfm">
-
+      <cfoutput>
       <div class="body flex-grow-1">
         <div class="container-lg px-4">
             <div class="card">
@@ -12,7 +12,7 @@
                     <h6 class="card-title">User Form</h6>
                 </div>
                 <div class="card-body">
-                    <cfform action="#application.baseURL#?page=user-save" method="post" id="userForm">
+                    <cfform action="" method="post" id="userForm">
                         <cfif structKeyExists(url, "id")>
                             <cfinput type="hidden" name="id" value="#url.id#">
                         </cfif>
@@ -34,10 +34,10 @@
                             <div class="col-md-6">
                                 <label for="role" class="form-label">Role</label>
                                 <cfselect name="role" class="form-select" required="true">
-                                    <option value="">Select Role</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="contributor">Contributor</option>
-                                    <option value="user">User</option>
+                                    <option value="" disabled selected>Select Role</option>
+                                    <cfloop query="variables.roles">
+                                        <option value="#variables.roles.role_id#">#variables.roles.name#</option>
+                                    </cfloop>
                                 </cfselect>
                             </div>
                         </div>
@@ -45,11 +45,10 @@
                             <div class="col-md-6">
                                 <label for="accessLevel" class="form-label">Access Level</label>
                                 <cfselect name="accessLevel" class="form-select" required="true">
-                                    <option value="">Select Access Level</option>
-                                    <option value="developer">Developer</option>
-                                    <option value="qa">QA</option>
-                                    <option value="manager">Manager</option>
-                                    <option value="finance">Finance</option>
+                                    <option value="" disabled selected>Select Access Level</option>
+                                    <cfloop query="variables.accessLevels">
+                                        <option value="#variables.accessLevels.access_level_id#">#variables.accessLevels.name#</option>
+                                    </cfloop>
                                 </cfselect>
                             </div>
                         </div>
@@ -62,8 +61,11 @@
             </div>
         </div>
       </div>
+      </cfoutput>
       <cfinclude  template="../shared/footer.cfm">
+      <cfinclude  template="../shared/toast.cfm">
     </div>
     <cfinclude  template="../shared/scripts.cfm">
+    <script src="assets/js/adminUser.js"></script>
   </body>
 </html>

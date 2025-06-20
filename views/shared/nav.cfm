@@ -1,4 +1,6 @@
   <cfoutput>
+      <!-- Inject application.baseURL into a data attribute (to access in js file)-->
+    <div id="appConfig" data-baseurl="#application.baseURL#"></div>
     <div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
       <div class="sidebar-header border-bottom">
         <div class="sidebar-brand">
