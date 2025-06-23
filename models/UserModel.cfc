@@ -51,4 +51,25 @@
         <cfset result.message = "Password updated successfully.">
         <cfreturn result>
     </cffunction>
+
+    <cffunction name="authenticate" access="public" returntype="query">
+        <cfargument name="username" type="string" required="true">
+        <cfargument name="password" type="string" required="true">
+        <cfquery name="qryUser" datasource="#application.datasource#">
+            SELECT 
+                users.user_id, 
+                users.first_name, 
+                users.last_name, 
+                users.email,
+                users.is_registered, 
+                roles.name as role, 
+                access_levels.name as access_level
+            FROM users
+            LEFT JOIN roles ON users.role_id = roles.role_id
+            LEFT JOIN access_levels ON users.access_level_id = access_levels.access_level_id
+            WHERE users.email = <cfqueryparam value="#username#" cfsqltype="cf_sql_varchar">
+            AND users.password = <cfqueryparam value="#password#" cfsqltype="cf_sql_varchar">
+        </cfquery>
+        <cfreturn qryUser>
+    </cffunction>
 </cfcomponent>

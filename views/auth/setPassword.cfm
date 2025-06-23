@@ -39,6 +39,6 @@
     </cfoutput>
     <cfinclude  template="../shared/toast.cfm">
     <cfinclude  template="../shared/scripts.cfm">
-    <script src="assets/js/setPassword.js"></script>
+    <script src="assets/js/auth.js"></script>
   </body>
 </html>

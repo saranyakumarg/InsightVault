@@ -20,7 +20,7 @@ $(document).ready(function() {
         }
         // check password contains at least one uppercase letter
         $.ajax({
-            url: baseURL + 'controllers/AdminController.cfm?method=setPassword',
+            url: baseURL + 'controllers/AdminController.cfm?method=set-password',
             type: 'POST',
             data: formData,
             success: function(response) {
@@ -39,6 +39,55 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#loginForm').on('submit', function(e) {
+        e.preventDefault();
+        var formData = {
+            username: $('#username').val(),
+            password: $('#password').val()
+        };
+        var hasError = false;
+
+        if(formData.password === ''){
+            $('#passwordError').text('Please enter a password').show();
+            hasError = true;
+        } else{
+            $('#passwordError').hide();
+        }
+        if (formData.username === '') {
+            $('#usernameError').text('Please enter a username').show();
+            hasError = true;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.username)) {
+            $('#usernameError').text('Please enter a valid username').show();
+            hasError = true;
+        } else {
+            $('#usernameError').hide();
+        }
+        if(hasError){
+            return;
+        }
+        $.ajax({
+            url: baseURL + 'controllers/AuthController.cfm?method=login',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                var jsonResponse = JSON.parse(response);
+                console.log(jsonResponse);
+                if (jsonResponse.SUCCESS) {
+                    showToast("Login", "Login successful!", "success");
+                    setTimeout(function () {
+                        window.location.href = baseURL + '?page=dashboard';
+                    }, 1000);
+                } else {    
+                    showToast("Login", jsonResponse.message, "danger");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error logging in: ' + error);
+            }
+        });
+    });
+
     
     function showToast(title, message, type) {
         document.getElementById('toastTitle').textContent = title;

@@ -17,7 +17,7 @@ $(document).ready(function() {
         }
         
         $.ajax({
-            url: baseURL + 'controllers/AdminController.cfm?method=saveUser',
+            url: baseURL + 'controllers/AdminController.cfm?method=save-user',
             type: 'POST',
             data: formData,
             success: function(response) {

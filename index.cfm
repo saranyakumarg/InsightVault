@@ -3,12 +3,18 @@
 <cfelse>
     <cfset variables.route = "login">
 </cfif>
+
+<cfif structKeyExists(session, "user")>
+    <cfset variables.route = variables.route>
+<cfelse>        
+    <cfset variables.route = "login">
+</cfif>
 <cfset variables.title = "">
 
 <cfswitch expression="#variables.route#"> 
-    <cfcase value="admin-dashboard">
+    <cfcase value="dashboard">
         <cfset variables.title = "Dashboard">
-        <cfinclude template="views/dashboard/adminDashboard.cfm">
+        <cfinclude template="views/dashboard/dashboard.cfm">
     </cfcase>
     <cfcase value="users-all">
         <cfset variables.title = "All Users">

@@ -17,13 +17,13 @@
 
     if (structKeyExists(url, "method")) {
         switch (url.method) {
-            case "saveUser":
+            case "save-user":
                 saveUser();
                 break;
             case "complete-registration":
                 completeRegistration();
                 break;
-            case "setPassword":
+            case "set-password":
                 setPassword();
                 break;
             default:
