@@ -9,7 +9,7 @@
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;##sidebar&quot;)).toggle()"></button>
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
-        <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=admin-dashboard">
+        <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=dashboard">
           <svg class="nav-icon">
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-speedometer"></use>
           </svg> Dashboard</a>
