@@ -20,10 +20,6 @@
         <cfset variables.title = "All Users">
         <cfinclude template="views/users/list.cfm">
     </cfcase>
-    <cfcase value="users-pending">
-        <cfset variables.title = "Pending Users">
-        <cfinclude template="views/users/list.cfm">
-    </cfcase>
     <cfcase value="user-create">
         <cfset variables.title = "Create User">
         <cfinclude template="controllers/AdminController.cfm">

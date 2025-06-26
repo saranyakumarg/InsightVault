@@ -34,6 +34,8 @@
                     last_name: userData.last_name,
                     email: userData.email,
                     role: userData.role,
+                    role_id: userData.role_id,
+                    access_level_id: userData.access_level_id,
                     access_level: userData.access_level
                 };
                 writeOutput(serializeJSON({ "SUCCESS": true, "message": "Login successful" }));

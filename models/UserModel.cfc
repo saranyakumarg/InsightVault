@@ -1,4 +1,13 @@
 <cfcomponent displayname="UserModel">
+
+    <cffunction name="emailExists" access="public" returntype="boolean">
+        <cfargument name="email" type="string" required="true">
+        <cfquery name="qryEmail" datasource="#application.datasource#">
+            SELECT COUNT(*) as count FROM users WHERE email = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar">
+        </cfquery>
+        <cfreturn qryEmail.count GT 0>
+    </cffunction>
+
     <cffunction name="saveUser" access="public" returntype="struct">
         <cfargument name="userData" type="struct" required="true">
         <cfset var result = {}>
@@ -63,12 +72,84 @@
                 users.email,
                 users.is_registered, 
                 roles.name as role, 
+                roles.role_id as role_id, 
+                access_levels.access_level_id as access_level_id,
                 access_levels.name as access_level
             FROM users
             LEFT JOIN roles ON users.role_id = roles.role_id
             LEFT JOIN access_levels ON users.access_level_id = access_levels.access_level_id
             WHERE users.email = <cfqueryparam value="#username#" cfsqltype="cf_sql_varchar">
             AND users.password = <cfqueryparam value="#password#" cfsqltype="cf_sql_varchar">
+        </cfquery>
+        <cfreturn qryUser>
+    </cffunction>
+
+    <cffunction name="getTotalUserCount" access="public" returntype="numeric">
+        <cfargument name="user_id" type="numeric" required="true">
+        <cfargument name="type" type="string" required="true">
+        <cfquery name="qryUser" datasource="#application.datasource#">
+            SELECT COUNT(*) as total FROM users
+            WHERE user_id != <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer"> 
+            <cfif type eq "pending">
+                AND is_registered = 0
+            <cfelseif type eq "completed">
+                AND is_registered = 1
+            </cfif>
+        </cfquery>
+        <cfreturn qryUser.total>
+    </cffunction>
+
+    <cffunction name="getFilteredUserCount" access="public" returntype="numeric">
+        <cfargument name="searchValue" type="string" required="true">
+        <cfargument name="user_id" type="numeric" required="true">
+        <cfargument name="type" type="string" required="true">
+        <cfquery name="qryUser" datasource="#application.datasource#">
+            SELECT COUNT(*) as total FROM users 
+            WHERE user_id != <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+            <cfif type eq "pending">
+                AND is_registered = 0
+            <cfelseif type eq "completed">
+                AND is_registered = 1
+            </cfif>
+            AND (first_name LIKE '%#searchValue#%' OR last_name LIKE '%#searchValue#%' OR email LIKE '%#searchValue#%')
+        </cfquery>
+        <cfreturn qryUser.total>
+    </cffunction>
+
+    <cffunction name="getUsers" access="public" returntype="query">
+        <cfargument name="draw" type="numeric" required="true">
+        <cfargument name="start" type="numeric" required="true">    
+        <cfargument name="length" type="numeric" required="true">
+        <cfargument name="searchValue" type="string" required="true">
+        <cfargument name="orderColumn" type="string" required="true">
+        <cfargument name="orderDir" type="string" required="true">
+        <cfargument name="totalRecords" type="numeric" required="true">
+        <cfargument name="filteredRecords" type="numeric" required="true">
+        <cfargument name="user_id" type="numeric" required="true">
+        <cfargument name="type" type="string" required="true">
+        <cfquery name="qryUser" datasource="#application.datasource#">
+            SELECT
+                users.user_id,
+                users.first_name,
+                users.last_name,
+                users.email,
+                roles.name as role,
+                access_levels.name as access_level,
+                users.is_registered
+            FROM users
+            LEFT JOIN roles ON users.role_id = roles.role_id
+            LEFT JOIN access_levels ON users.access_level_id = access_levels.access_level_id
+            WHERE users.user_id != <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+            <cfif type eq "pending">
+                AND users.is_registered = 0
+            <cfelseif type eq "completed">
+                AND users.is_registered = 1
+            </cfif>
+            <cfif searchValue neq "">
+                AND (users.first_name LIKE '%#searchValue#%' OR users.last_name LIKE '%#searchValue#%' OR users.email LIKE '%#searchValue#%')
+            </cfif>
+            ORDER BY #orderColumn# #orderDir#
+            LIMIT #start#, #length#
         </cfquery>
         <cfreturn qryUser>
     </cffunction>

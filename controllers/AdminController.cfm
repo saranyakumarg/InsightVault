@@ -26,6 +26,9 @@
             case "set-password":
                 setPassword();
                 break;
+            case "get-users":
+                getUsers();
+                break;
             default:
                 writeOutput(serializeJSON({ "success": false, "message": "Unknown method: " & url.method }));
                 break;
@@ -45,16 +48,22 @@
             token_expiry: token_expiry,
             is_registered: false
         };
+        // Check if email already exists
+        var emailExists = variables.userModel.emailExists(userData.email);
+        if (emailExists) {
+            writeOutput(serializeJSON({ "success": false, "message": "Email already exists." }));
+            return;
+        }
         var userResponse = variables.userModel.saveUser(userData);
         // sendRegistrationEmail(userData, registration_token); // uncomment for sending email to user
         var auditAction = "User Created By Admin";
         var auditDetails = "User " & userData.firstName & " " & userData.lastName & " (" & userData.email & ") created with role ID " & userData.role & " and access level ID " & userData.accessLevel;
         var auditData = {
-            user_id: userResponse.user_id, // replaced with session.user_id after login
-            role_id: userData.role,         // replaced with session.role_id after login
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
             action: auditAction,
             entity_type: "Users",
-            access_level_id: userData.accessLevel, // replaced with session.access_level_id after login
+            access_level_id: session.user.access_level_id,
             details: auditDetails
         };
         variables.auditLogModel.saveAuditLog(auditData);
@@ -112,6 +121,63 @@
                 writeOutput("Password and repeat password do not match");
             }
         }
+    }
+
+    function getUsers() {
+        var type = structKeyExists(url, "type") ? url.type : "all";
+        var draw = url.draw;
+        var start = url.start;
+        var length = url.length;
+        var searchValue = structKeyExists(url, "search[value]") ? url["search[value]"] : "";
+        var orderColumnIndex = structKeyExists(url, "order[0][column]") ? url["order[0][column]"] : "0";
+        var orderDir = structKeyExists(url, "order[0][dir]") ? url["order[0][dir]"] : "asc";
+        var columnMap = ["user_id", "first_name", "last_name", "email", "role", "access_level", "is_registered"];
+        var orderColumn = columnMap[orderColumnIndex + 1];
+        var totalRecords = variables.userModel.getTotalUserCount(session.user.user_id, type);
+        if(searchValue != ""){
+            var filteredRecords = variables.userModel.getFilteredUserCount(searchValue, session.user.user_id, type);
+        } else {
+            var filteredRecords = totalRecords;
+        }
+        var users = variables.userModel.getUsers(draw, start, length, searchValue, orderColumn, orderDir, totalRecords, filteredRecords, session.user.user_id, type);
+        var data = [];
+        for (var i=1; i <= users.recordCount; i++) {
+            var user = {
+                "user_id": users["USER_ID"][i],
+                "first_name": users["FIRST_NAME"][i],
+                "last_name": users["LAST_NAME"][i],
+                "email": users["EMAIL"][i],
+                "role": users["ROLE"][i],
+                "access_level": users["ACCESS_LEVEL"][i],
+                "is_registered": users["IS_REGISTERED"][i]
+            };
+            var editAction = "#application.baseURL#?page=user-create&id=#user.user_id#";
+            var viewAction = "#application.baseURL#?page=view-user&id=#user.user_id#";
+            var actions = '
+                <button class="edit-btn" title="Edit User" onclick="window.location.href=''#editAction#''">
+                    <i class="icon cil-pencil"></i>
+                </button>
+                <button class="delete-btn" title="Delete" onclick="deleteUser(#user.user_id#)">
+                    <i class="icon cil-trash" data-coreui-toggle="modal" data-coreui-target="##staticBackdrop"></i>
+                </button>
+            ';
+            arrayAppend(data, {
+                "user_id": user.user_id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "role": user.role,
+                "access_level": user.access_level,
+                "is_registered": user.is_registered ? "Completed" : "Pending",
+                "actions": actions
+            });
+        }
+        writeOutput(serializeJSON({
+            "draw": draw,
+            "recordsTotal": totalRecords,
+            "recordsFiltered": filteredRecords,
+            "data": data
+        }));
     }
     // gkuh vkht fbbt xljq
 </cfscript>

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var baseURL = document.getElementById("appConfig").getAttribute("data-baseurl");
-    // create user
+    // User Creation
     $('#userForm').on('submit', function(e) {
         e.preventDefault();
         
@@ -23,12 +23,12 @@ $(document).ready(function() {
             success: function(response) {
                 var jsonResponse = JSON.parse(response); 
                 if (jsonResponse.SUCCESS) {
-                    showSuccessToast("User", "User saved successfully!");
+                    showToast("User", "User saved successfully!","success");
                     setTimeout(function () {
-                        window.location.href = baseURL + '?page=users-pending';
+                        window.location.href = baseURL + '?page=users-all';
                     }, 1000);
                 } else {
-                    alert('Error saving user: ' + jsonResponse.message);
+                    showToast("User", jsonResponse.message, "danger");
                 }
             },
             error: function(xhr, status, error) {
@@ -36,14 +36,45 @@ $(document).ready(function() {
             }
         });
     });
+
+    // User List
+    $('#usersTable').DataTable({
+        "processing": true, 
+        "serverSide": true,  
+        "scrollY": "480px", // Set fixed table height
+        "ajax": baseURL + "controllers/AdminController.cfm?method=get-users",  
+        "columns": [
+            { "data": "user_id" },
+            { "data": "first_name" },
+            { "data": "last_name" },
+            { "data": "email" },
+            { "data": "role" },
+            { "data": "access_level" },
+            { "data": "is_registered" },
+            { "data": "actions", "orderable": false }
+        ],
+        "language": {
+            "emptyTable": "<div style='height:200px;display:flex;align-items:center;justify-content:center;'>No data available in table</div>"
+        }
+    });
+
+    // User List Status Filter
+    var statusDropdown = document.getElementById("list_status");
+    var usersTable = $('#usersTable').DataTable();
+
+    // User List Status Filter
+    statusDropdown.addEventListener("change", function() {
+        var selectedStatus = this.value;
+        var ajaxUrl = baseURL + "controllers/AdminController.cfm?method=get-users";
+        if(selectedStatus !== "all") {
+            ajaxUrl += "&type=" + selectedStatus;
+        }
+        usersTable.ajax.url(ajaxUrl).load();
+    });
+
     
     $('.btn-secondary').on('click', function() {
         window.location.href = baseURL + '?page=users-pending';
     });
 
-    function showSuccessToast(title, message) {
-        document.getElementById('toastTitle').textContent = title;
-        document.getElementById('toastBody').textContent = message;
-        document.getElementById('liveToast').classList.add('show');
-    }
 });

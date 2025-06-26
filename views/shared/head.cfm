@@ -22,7 +22,6 @@
     <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <!-- Vendors styles-->
-    <link rel="stylesheet" href="assets/coreui/node_modules/simplebar/dist/simplebar.css">
     <link rel="stylesheet" href="assets/coreui/css/vendors/simplebar.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <!-- Main styles for this application-->
@@ -32,4 +31,5 @@
     <script src="assets/coreui/js/color-modes.js"></script>
     <link href="assets/coreui/node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
     <link href="assets/coreui/node_modules/@coreui/icons/css/free.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   </head>
