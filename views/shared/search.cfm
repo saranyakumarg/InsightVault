@@ -1,4 +1,5 @@
-          <div class="row">
+<cfoutput>          
+        <div class="row">
             <div class="col-md-12">
               <div class="card mb-4">
                 <div class="card-header">Find contents that you need!!!</div>
@@ -46,7 +47,7 @@
 
                         <div class="text-center mt-4" id="noResults" style="display: none;">
                             <div class="p-4">
-                                <i class="icon cil-search mb-3" style="font-size: 3rem; color: #ccc;"></i>
+                                <i class="icon cil-search mb-3" style="font-size: 3rem; color: ##ccc;"></i>
                                 <h5 class="text-muted">No results found</h5>
                                 <p class="text-muted">Try adjusting your search criteria</p>
                             </div>
@@ -57,3 +58,4 @@
             </div>
             <!-- /.col-->
           </div>
+          </cfoutput>

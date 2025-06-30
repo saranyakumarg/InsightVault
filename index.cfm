@@ -25,6 +25,12 @@
         <cfinclude template="controllers/AdminController.cfm">
         <cfinclude template="views/users/form.cfm">
     </cfcase>
+    <cfcase value="user-update">
+        <cfset variables.title = "Update User">
+        <cfset url.method = "user-update">
+        <cfinclude template="controllers/AdminController.cfm">
+        <cfinclude template="views/users/form.cfm">
+    </cfcase>
     <cfcase value="content-all">
         <cfset variables.title = "All Contents">
         <cfinclude template="views/content/list.cfm">

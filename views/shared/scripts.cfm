@@ -1,4 +1,4 @@
-<!-- CoreUI and necessary plugins-->
+<cfoutput><!-- CoreUI and necessary plugins-->
     <script src="assets/coreui/node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
     <script>
       const header = document.querySelector('header.header');
@@ -18,3 +18,4 @@
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  </cfoutput>

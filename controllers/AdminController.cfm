@@ -29,6 +29,9 @@
             case "get-users":
                 getUsers();
                 break;
+            case "user-update":
+                updateUser();
+                break;
             default:
                 writeOutput(serializeJSON({ "success": false, "message": "Unknown method: " & url.method }));
                 break;
@@ -123,6 +126,12 @@
         }
     }
 
+    function updateUser() {
+        variables.userData = variables.userModel.getUserById(url.id);
+        // return variables.userData;
+        // writeDump(userData);abort;
+    }
+
     function getUsers() {
         var type = structKeyExists(url, "type") ? url.type : "all";
         var draw = url.draw;
@@ -151,7 +160,7 @@
                 "access_level": users["ACCESS_LEVEL"][i],
                 "is_registered": users["IS_REGISTERED"][i]
             };
-            var editAction = "#application.baseURL#?page=user-create&id=#user.user_id#";
+            var editAction = "#application.baseURL#?page=user-update&id=#user.user_id#";
             var viewAction = "#application.baseURL#?page=view-user&id=#user.user_id#";
             var actions = '
                 <button class="edit-btn" title="Edit User" onclick="window.location.href=''#editAction#''">

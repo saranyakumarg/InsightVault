@@ -49,6 +49,14 @@
         <cfreturn qryUser>
     </cffunction>
 
+    <cffunction  name="getUserById" access="public" returntype="query">
+        <cfargument  name="id" type="numeric" required="true">
+        <cfquery name="qryUser" datasource="#application.datasource#">
+            SELECT * FROM users WHERE user_id = <cfqueryparam value="#id#" cfsqltype="cf_sql_varchar">
+        </cfquery>
+        <cfreturn qryUser>
+    </cffunction>
+
     <cffunction name="setPassword" access="public" returntype="struct">
         <cfargument name="userData" type="struct" required="true">
         <cfquery name="qryUser" datasource="#application.datasource#">

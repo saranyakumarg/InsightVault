@@ -1,3 +1,4 @@
+<cfoutput>
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-coreui-backdrop="static" data-coreui-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -16,3 +17,4 @@
     </div>
   </div>
 </div>
+</cfoutput>

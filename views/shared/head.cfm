@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<cfoutput><!DOCTYPE html>
 <!--
 * CoreUI - Free Bootstrap Admin Template
 * @version v5.2.0
@@ -18,9 +18,9 @@
     <meta name="keyword" content="Knowledge Base, Documentation, Internal, System, Bootstrap, Admin, Template, Open, Source, jQuery, CSS, HTML, Dashboard">
     <title>InsightValut</title>
     <link rel="manifest" href="assets/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileColor" content="##ffffff">
     <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="##ffffff">
     <!-- Vendors styles-->
     <link rel="stylesheet" href="assets/coreui/css/vendors/simplebar.css">
     <link rel="stylesheet" href="assets/css/main.css">
@@ -33,3 +33,4 @@
     <link href="assets/coreui/node_modules/@coreui/icons/css/free.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   </head>
+  </cfoutput>

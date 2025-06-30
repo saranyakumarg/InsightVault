@@ -15,7 +15,7 @@
           </svg> Dashboard</a>
         </li>
         <li class="nav-group <cfif structKeyExists(URL, "page") && url.page == "content-all" || url.page == "content-pending">show</cfif>">
-          <a class="nav-link nav-group-toggle" href="##">
+          <a class="nav-link nav-group-toggle" href="">
             <svg class="nav-icon">
               <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-notes"></use>
             </svg> Contents
