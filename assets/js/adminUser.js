@@ -9,15 +9,17 @@ $(document).ready(function() {
             lastName: $('#lastName').val(),
             email: $('#email').val(),
             role: $('#role').val(),
-            accessLevel: $('#accessLevel').val()
+            accessLevel: $('#accessLevel').val(),
         };
-        
+
+        var method = "save-user";
         if ($('input[name="id"]').length) {
             formData.id = $('input[name="id"]').val();
+            var method = "update-user";
         }
         
         $.ajax({
-            url: baseURL + 'controllers/AdminController.cfm?method=save-user',
+            url: baseURL + 'controllers/AdminController.cfm?method=' + method,
             type: 'POST',
             data: formData,
             success: function(response) {

@@ -2,8 +2,11 @@
 
     <cffunction name="emailExists" access="public" returntype="boolean">
         <cfargument name="email" type="string" required="true">
+        <cfargument name="userId" type="string" required="false">
         <cfquery name="qryEmail" datasource="#application.datasource#">
-            SELECT COUNT(*) as count FROM users WHERE email = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar">
+            SELECT COUNT(*) as count FROM users 
+            WHERE email = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar"> 
+            <cfif structKeyExists(arguments, "userId") and len(arguments.userId)> AND user_id != <cfqueryparam value="#userId#" cfsqltype="cf_sql_integer"></cfif>
         </cfquery>
         <cfreturn qryEmail.count GT 0>
     </cffunction>
@@ -11,31 +14,44 @@
     <cffunction name="saveUser" access="public" returntype="struct">
         <cfargument name="userData" type="struct" required="true">
         <cfset var result = {}>
-        <cfquery name="qryUser" datasource="#application.datasource#">
-            INSERT INTO users (
-                first_name, 
-                last_name, 
-                email, 
-                role_id, 
-                access_level_id, 
-                registration_token, 
-                token_expiry, 
-                is_registered
-            ) VALUES (
-                <cfqueryparam value="#userData.firstName#" cfsqltype="cf_sql_varchar">,
-                <cfqueryparam value="#userData.lastName#" cfsqltype="cf_sql_varchar">,
-                <cfqueryparam value="#userData.email#" cfsqltype="cf_sql_varchar">,
-                <cfqueryparam value="#userData.role#" cfsqltype="cf_sql_integer">,
-                <cfqueryparam value="#userData.accessLevel#" cfsqltype="cf_sql_integer">,
-                <cfqueryparam value="#userData.registration_token#" cfsqltype="cf_sql_varchar">,
-                <cfqueryparam value="#userData.token_expiry#" cfsqltype="cf_sql_timestamp">,
-                <cfqueryparam value="#userData.is_registered#" cfsqltype="cf_sql_bit">
-            )
-        </cfquery>
-        <cfquery name="qryGetId" datasource="#application.datasource#">
-            SELECT LAST_INSERT_ID() AS user_id
-        </cfquery>
-        <cfset result.user_id = qryGetId.user_id>
+        <cfif structKeyExists(userData, "userId") AND len(userData.userId)>
+            <cfquery name="qryUser" datasource="#application.datasource#">
+                UPDATE users SET 
+                    first_name = <cfqueryparam value="#userData.firstName#" cfsqltype="cf_sql_varchar">,
+                    last_name = <cfqueryparam value="#userData.lastName#" cfsqltype="cf_sql_varchar">,
+                    email = <cfqueryparam value="#userData.email#" cfsqltype="cf_sql_varchar">,
+                    role_id = <cfqueryparam value="#userData.role#" cfsqltype="cf_sql_integer">,
+                    access_level_id = <cfqueryparam value="#userData.accessLevel#" cfsqltype="cf_sql_integer">
+                WHERE user_id = <cfqueryparam value="#userData.userId#" cfsqltype="cf_sql_integer">
+            </cfquery>
+        <cfelse>
+            <cfquery name="qryUser" datasource="#application.datasource#">
+                INSERT INTO users (
+                    first_name, 
+                    last_name, 
+                    email, 
+                    role_id, 
+                    access_level_id, 
+                    registration_token, 
+                    token_expiry, 
+                    is_registered
+                ) VALUES (
+                    <cfqueryparam value="#userData.firstName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#userData.lastName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#userData.email#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#userData.role#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#userData.accessLevel#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#userData.registration_token#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#userData.token_expiry#" cfsqltype="cf_sql_timestamp">,
+                    <cfqueryparam value="#userData.is_registered#" cfsqltype="cf_sql_bit">
+                )
+            </cfquery>
+            <cfquery name="qryGetId" datasource="#application.datasource#">
+                SELECT LAST_INSERT_ID() AS user_id
+            </cfquery>
+        </cfif>
+        
+        <cfset result.user_id = structKeyExists(userData, "userId") ? userData.userId : qryGetId.user_id>
         <cfset result.message = "User saved successfully">
         <cfset result.success = true>
         <cfreturn result>

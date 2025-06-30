@@ -25,9 +25,9 @@
         <cfinclude template="controllers/AdminController.cfm">
         <cfinclude template="views/users/form.cfm">
     </cfcase>
-    <cfcase value="user-update">
+    <cfcase value="edit-user">
         <cfset variables.title = "Update User">
-        <cfset url.method = "user-update">
+        <cfset url.method = "edit-user">
         <cfinclude template="controllers/AdminController.cfm">
         <cfinclude template="views/users/form.cfm">
     </cfcase>

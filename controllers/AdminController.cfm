@@ -15,6 +15,15 @@
     // Get the audit log model
     variables.auditLogModel = createObject("component", application.baseURL & "models.AuditLogModel");
 
+    // for edit
+    variables.euser_id = "";
+    variables.efirst_name = "";
+    variables.elast_name = "";
+    variables.eemail = "";
+    variables.eaccess_level_id = "";
+    variables.erole_id = "";
+
+
     if (structKeyExists(url, "method")) {
         switch (url.method) {
             case "save-user":
@@ -29,7 +38,10 @@
             case "get-users":
                 getUsers();
                 break;
-            case "user-update":
+            case "edit-user":
+                editUser();
+                break;
+            case "update-user":
                 updateUser();
                 break;
             default:
@@ -126,10 +138,63 @@
         }
     }
 
-    function updateUser() {
+    function editUser() {
         variables.userData = variables.userModel.getUserById(url.id);
-        // return variables.userData;
-        // writeDump(userData);abort;
+        variables.euser_id = variables.userData.user_id;
+        variables.efirst_name = variables.userData.first_name;
+        variables.elast_name = variables.userData.last_name;
+        variables.eemail = variables.userData.email;
+        variables.eaccess_level_id = variables.userData.access_level_id;
+        variables.erole_id = variables.userData.role_id;
+    }
+
+    function updateUser(){
+        var userData = {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            role: form.role,
+            accessLevel: form.accessLevel,
+            userId: form.id
+        };
+
+        // Check if email already exists
+        var emailExists = variables.userModel.emailExists(userData.email, userData.userId);
+        if (emailExists) {
+            writeOutput(serializeJSON({ "success": false, "message": "Email already exists." }));
+            return;
+        }
+
+        var userResponse = variables.userModel.saveUser(userData);
+
+        var auditAction = "User Edited By Admin";
+        var changedFields = [];
+        if (variables.efirst_name NEQ userData.firstName) {
+            arrayAppend(changedFields, "First Name: " & variables.efirst_name & " -> " & userData.firstName);
+        }
+        if (variables.elast_name NEQ userData.lastName) {
+            arrayAppend(changedFields, "Last Name: " & variables.elast_name & " -> " & userData.lastName);
+        }
+        if (variables.eemail NEQ userData.email) {
+            arrayAppend(changedFields, "Email: " & variables.eemail & " -> " & userData.email);
+        }
+        if (variables.erole_id NEQ userData.role) {
+            arrayAppend(changedFields, "Role ID: " & variables.erole_id & " -> " & userData.role);
+        }
+        if (variables.eaccess_level_id NEQ userData.accessLevel) {
+            arrayAppend(changedFields, "Access Level ID: " & variables.eaccess_level_id & " -> " & userData.accessLevel);
+        }
+        var auditDetails = "User " & userData.firstName & " " & userData.lastName & " (" & userData.email & ") edited. Changed details: " & (arrayLen(changedFields) ? arrayToList(changedFields, "; ") : "No changes detected");
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "Users",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
+        writeOutput(serializeJSON(userResponse));
     }
 
     function getUsers() {
@@ -160,7 +225,7 @@
                 "access_level": users["ACCESS_LEVEL"][i],
                 "is_registered": users["IS_REGISTERED"][i]
             };
-            var editAction = "#application.baseURL#?page=user-update&id=#user.user_id#";
+            var editAction = "#application.baseURL#?page=edit-user&id=#user.user_id#";
             var viewAction = "#application.baseURL#?page=view-user&id=#user.user_id#";
             var actions = '
                 <button class="edit-btn" title="Edit User" onclick="window.location.href=''#editAction#''">

@@ -15,28 +15,31 @@
                 </div>
                 <div class="card-body">
                     <cfform action="" method="post" id="userForm">
+                        <cfif len(trim(variables.euser_id))>
+                            <input type="hidden" name="id" value="#variables.euser_id#">
+                        </cfif>
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label">First Name</label>
-                                <cfinput type="text" class="form-control" id="firstName" name="firstName" >
+                                <cfinput type="text" class="form-control" id="firstName" name="firstName" value="#variables.efirst_name#">
                             </div>
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label">Last Name</label>
-                                <cfinput type="text" class="form-control" id="lastName" name="lastName" >
+                                <cfinput type="text" class="form-control" id="lastName" name="lastName" value="#variables.elast_name#">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Email</label>
-                                <cfinput type="email" class="form-control" id="email" name="email" >
+                                <cfinput type="email" class="form-control" id="email" name="email" value="#variables.eemail#">
                             </div>
                             <div class="col-md-6">
                                 <label for="role" class="form-label">Role</label>
-                                <cfselect name="role" class="form-select" >
-                                    <option value="" disabled selected>Select Role</option>
+                                <cfselect name="role" class="form-select">
+                                    <option value="" disabled>Select Role</option>
                                     <cfloop query="variables.roles">
-                                        <option value="#variables.roles.role_id#">#variables.roles.name#</option>
+                                        <option value="#variables.roles.role_id#"<cfif variables.roles.role_id EQ variables.erole_id> selected</cfif>>#variables.roles.name#</option>
                                     </cfloop>
                                 </cfselect>
                             </div>
@@ -47,7 +50,7 @@
                                 <cfselect name="accessLevel" class="form-select" >
                                     <option value="" disabled selected>Select Access Level</option>
                                     <cfloop query="variables.accessLevels">
-                                        <option value="#variables.accessLevels.access_level_id#">#variables.accessLevels.name#</option>
+                                        <option value="#variables.accessLevels.access_level_id#" <cfif variables.accessLevels.access_level_id EQ variables.eaccess_level_id> selected</cfif>>#variables.accessLevels.name#</option>
                                     </cfloop>
                                 </cfselect>
                             </div>
