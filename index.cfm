@@ -22,13 +22,13 @@
     </cfcase>
     <cfcase value="user-create">
         <cfset variables.title = "Create User">
-        <cfinclude template="controllers/AdminController.cfm">
+        <cfinclude template="controllers/AdminUserController.cfm">
         <cfinclude template="views/users/form.cfm">
     </cfcase>
     <cfcase value="edit-user">
         <cfset variables.title = "Update User">
         <cfset url.method = "edit-user">
-        <cfinclude template="controllers/AdminController.cfm">
+        <cfinclude template="controllers/AdminUserController.cfm">
         <cfinclude template="views/users/form.cfm">
     </cfcase>
     <cfcase value="content-all">
@@ -70,7 +70,7 @@
     </cfcase>
     <cfcase value="complete-registration">
         <cfset url.method = "complete-registration">
-        <cfinclude template="controllers/AdminController.cfm">
+        <cfinclude template="controllers/AuthController.cfm">
     </cfcase>
     <cfcase value="set-password">
         <cfinclude template="views/auth/setPassword.cfm">

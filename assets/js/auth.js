@@ -20,7 +20,7 @@ $(document).ready(function() {
         }
         // check password contains at least one uppercase letter
         $.ajax({
-            url: baseURL + 'controllers/AdminController.cfm?method=set-password',
+            url: baseURL + 'controllers/AuthController.cfm?method=set-password',
             type: 'POST',
             data: formData,
             success: function(response) {

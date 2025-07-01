@@ -12,6 +12,12 @@
             case "login":
                 login();
                 break;
+            case "complete-registration":
+                completeRegistration();
+                break;
+            case "set-password":
+                setPassword();
+                break;
             case "logout":
                 logout();
                 break;
@@ -42,6 +48,37 @@
             }
         } else {
             writeOutput(serializeJSON({ "SUCCESS": false, "message": "Invalid username or password" }));
+        }
+    }
+
+    function completeRegistration() {
+        var userData = variables.userModel.getUserByToken(url.token);
+        if (userData.recordCount > 0) {
+            if (userData.is_registered == 1) {
+                location(url="?page=errors&status_code=3", addToken=false);
+            } else if (now() > userData.token_expiry) {
+                location(url="?page=errors&status_code=1", addToken=false);
+            } else {
+                location(url="?page=set-password&url.token=#url.token#", addToken=false);
+            }
+        } else {
+            location(url="?page=errors&status_code=2", addToken=false);
+        }
+    }
+
+    function setPassword() {
+        var userData = variables.userModel.getUserByToken(form.token);
+        if (userData.recordCount > 0) {
+            if (form.password == form.repeatPassword) {
+                var userData = {
+                    password: hmac(form.password, application.secretKey, "HMACSHA256"),
+                    registration_token: form.token
+                };
+                var userResponse = variables.userModel.setPassword(userData);
+                writeOutput(serializeJSON(userResponse)); 
+            } else {
+                writeOutput("Password and repeat password do not match");
+            }
         }
     }
 

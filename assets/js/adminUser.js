@@ -19,7 +19,7 @@ $(document).ready(function() {
         }
         
         $.ajax({
-            url: baseURL + 'controllers/AdminController.cfm?method=' + method,
+            url: baseURL + 'controllers/AdminUserController.cfm?method=' + method,
             type: 'POST',
             data: formData,
             success: function(response) {
@@ -44,7 +44,7 @@ $(document).ready(function() {
         "processing": true, 
         "serverSide": true,  
         "scrollY": "480px", // Set fixed table height
-        "ajax": baseURL + "controllers/AdminController.cfm?method=get-users",  
+        "ajax": baseURL + "controllers/AdminUserController.cfm?method=get-users",  
         "columns": [
             { "data": "user_id" },
             { "data": "first_name" },
@@ -67,7 +67,7 @@ $(document).ready(function() {
     // User List Status Filter
     statusDropdown.addEventListener("change", function() {
         var selectedStatus = this.value;
-        var ajaxUrl = baseURL + "controllers/AdminController.cfm?method=get-users";
+        var ajaxUrl = baseURL + "controllers/AdminUserController.cfm?method=get-users";
         if(selectedStatus !== "all") {
             ajaxUrl += "&type=" + selectedStatus;
         }
@@ -102,7 +102,7 @@ $(document).ready(function() {
 
     function deleteUser(user_id) {
         $.ajax({
-            url: baseURL + "controllers/AdminController.cfm?method=delete-user",
+            url: baseURL + "controllers/AdminUserController.cfm?method=delete-user",
             type: "POST",
             data: { user_id: user_id },
             success: function(response) {
@@ -125,7 +125,7 @@ $(document).ready(function() {
 
     function handleUserApproval(user_id, approval_status) {
         $.ajax({
-            url: baseURL + "controllers/AdminController.cfm?method=handle-user-approval",
+            url: baseURL + "controllers/AdminUserController.cfm?method=handle-user-approval",
             type: "POST",
             data: { user_id: user_id, approval_status: approval_status},
             success: function(response) {
