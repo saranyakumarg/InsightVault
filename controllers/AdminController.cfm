@@ -44,6 +44,12 @@
             case "update-user":
                 updateUser();
                 break;
+            case "delete-user":
+                deleteUser();
+                break;
+            case "handle-user-approval":
+                handleUserApproval();
+                break;
             default:
                 writeOutput(serializeJSON({ "success": false, "message": "Unknown method: " & url.method }));
                 break;
@@ -197,6 +203,88 @@
         writeOutput(serializeJSON(userResponse));
     }
 
+    function deleteUser() {
+        var user_id = form.user_id;
+        if (!len(trim(user_id))) {
+            writeOutput(serializeJSON({ "success": false, "message": "User ID is required." }));
+            return;
+        }
+
+        var userQuery = variables.userModel.getUserById(user_id);
+        if (!isQuery(userQuery) || userQuery.recordCount EQ 0) {
+            writeOutput(serializeJSON({ "success": false, "message": "User not found." }));
+            return;
+        }
+
+        var deleteResult = variables.userModel.deleteUser(user_id);
+
+        // Audit log for deletion
+        var auditAction = "User Deleted By Admin";
+        var auditDetails = "User with ID " & user_id & " deleted by admin.";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "Users",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
+
+        if (deleteResult.success) {
+            writeOutput(serializeJSON({ "SUCCESS": true, "message": "User deleted successfully." }));
+        } else {
+            writeOutput(serializeJSON({ "success": false, "message": deleteResult.message ?: "Failed to delete user." }));
+        }
+    }
+
+
+    function handleUserApproval() {
+        var user_id = form.user_id;
+        var approval_status = form.approval_status;
+
+        if (!len(trim(user_id))) {
+            writeOutput(serializeJSON({ "success": false, "message": "User ID is required." }));
+            return;
+        }
+        if (!isNumeric(approval_status)) {
+            writeOutput(serializeJSON({ "success": false, "message": "Approval status is required." }));
+            return;
+        }
+
+        if (!(approval_status == 1 || approval_status == 2)) {
+            writeOutput(serializeJSON({ "success": false, "message": "Invalid approval status." }));
+            return;
+        }
+
+        var userQuery = variables.userModel.getUserById(user_id);
+        if (!isQuery(userQuery) || userQuery.recordCount EQ 0) {
+            writeOutput(serializeJSON({ "success": false, "message": "User not found." }));
+            return;
+        }
+
+        var deleteResult = variables.userModel.updateUserApproval(user_id, approval_status);
+
+        // Audit log for approval/rejection
+        var auditAction = (approval_status == 1 ? "User Approved By Admin" : "User Rejected By Admin");
+        var auditDetails = "User with ID " & user_id & (approval_status == 1 ? " approved" : " rejected") & " by admin.";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "Users",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
+
+        if (deleteResult.success) {
+            writeOutput(serializeJSON({ "SUCCESS": true, "message": "User deleted successfully." }));
+        } else {
+            writeOutput(serializeJSON({ "success": false, "message": deleteResult.message ?: "Failed to delete user." }));
+        }
+    }
+
     function getUsers() {
         var type = structKeyExists(url, "type") ? url.type : "all";
         var draw = url.draw;
@@ -216,6 +304,7 @@
         var users = variables.userModel.getUsers(draw, start, length, searchValue, orderColumn, orderDir, totalRecords, filteredRecords, session.user.user_id, type);
         var data = [];
         for (var i=1; i <= users.recordCount; i++) {
+            var action = "";
             var user = {
                 "user_id": users["USER_ID"][i],
                 "first_name": users["FIRST_NAME"][i],
@@ -223,18 +312,31 @@
                 "email": users["EMAIL"][i],
                 "role": users["ROLE"][i],
                 "access_level": users["ACCESS_LEVEL"][i],
-                "is_registered": users["IS_REGISTERED"][i]
+                "is_registered": users["IS_REGISTERED"][i],
+                "is_public_registration": users["IS_PUBLIC_REGISTRATION"][i]
             };
             var editAction = "#application.baseURL#?page=edit-user&id=#user.user_id#";
             var viewAction = "#application.baseURL#?page=view-user&id=#user.user_id#";
-            var actions = '
-                <button class="edit-btn" title="Edit User" onclick="window.location.href=''#editAction#''">
-                    <i class="icon cil-pencil"></i>
+            var approveAction = "#application.baseURL#?page=view-user&id=#user.user_id#";
+            var type = "user";
+            var actions = "
+                <button class='edit-btn' title='Edit User' onclick='window.location.href=""#editAction#""'>
+                    <i class='icon cil-pencil'></i>
                 </button>
-                <button class="delete-btn" title="Delete" onclick="deleteUser(#user.user_id#)">
-                    <i class="icon cil-trash" data-coreui-toggle="modal" data-coreui-target="##staticBackdrop"></i>
+                <button class='delete-btn' title='Delete' onclick=""confirmModal('delete', #user.user_id#)"">
+                    <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##staticBackdrop'></i>
                 </button>
-            ';
+            ";
+            if(user.is_public_registration == 1 && user.is_registered == 0) {
+                actions &= "
+                <button class='Approve-btn' title='Approve' onclick=""confirmModal('approve', #user.user_id#)"">
+                    <i class='icon cil-check-alt' data-coreui-toggle='modal' data-coreui-target='##staticBackdrop'></i>
+                </button>
+                <button class='Reject-btn' title='Reject' onclick=""confirmModal('reject',#user.user_id#)"">
+                    <i class='icon cil-x-circle' data-coreui-toggle='modal' data-coreui-target='##staticBackdrop'></i>
+                </button>
+                ";
+            }
             arrayAppend(data, {
                 "user_id": user.user_id,
                 "first_name": user.first_name,
@@ -242,7 +344,8 @@
                 "email": user.email,
                 "role": user.role,
                 "access_level": user.access_level,
-                "is_registered": user.is_registered ? "Completed" : "Pending",
+                "is_registered": user.is_registered == 0 ? "Pending" : (user.is_registered == 1 ? "Completed" : (user.is_registered == 2 ? "Rejected" : user.is_registered)),
+                "is_registered": user.is_registered == 0 ? "Pending" : (user.is_registered == 1 ? "Completed" : (user.is_registered == 2 ? "Rejected" : user.is_registered)),
                 "actions": actions
             });
         }

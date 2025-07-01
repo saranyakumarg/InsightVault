@@ -19,6 +19,7 @@
                                 <option value="all" selected>All</option>
                                 <option value="pending">Pending</option>
                                 <option value="completed">Completed</option>
+                                <option value="rejected">Rejected</option>
                             </select>
                         </div>
                         <a href="#application.baseURL#?page=user-create" class="btn btn-primary">

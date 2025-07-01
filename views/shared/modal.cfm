@@ -7,12 +7,13 @@
         <h5 class="modal-title" id="staticBackdropLabel">User</h5>
         <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        Please click confirm to continue the process you have selected.
+      <div class="modal-body" id="modal_body">
+          Please click confirm to continue the process you have selected.
       </div>
+      <input type="hidden" id="user_id" name="user_id" value=""/>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="liveToastBtn">Confirm</button>
+        <button type="button" class="btn btn-primary" id="modalConfirm">Confirm</button>
       </div>
     </div>
   </div>

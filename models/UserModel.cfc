@@ -140,6 +140,44 @@
         <cfreturn qryUser.total>
     </cffunction>
 
+    <cffunction  name="deleteUser">
+        <cfargument name="user_id" type="numeric" required="true">
+        <cfset var result = { "success" = false, "message" = "" }>
+
+        <cftry>
+            <cfquery name="qryDelete" datasource="#application.datasource#">
+                DELETE FROM users
+                WHERE user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+                <cfset result.success = true>
+                <cfset result.message = "User deleted successfully.">
+            <cfcatch>
+                <cfset result.message = "Error deleting user: #cfcatch.message#">
+            </cfcatch>
+        </cftry>
+        <cfreturn result>
+    </cffunction>
+
+    <cffunction name="updateUserApproval" access="public" returntype="struct">
+        <cfargument name="user_id" type="numeric" required="true">
+        <cfargument name="approval_status" type="numeric" required="true">
+        <cfset var result = { "success" = false, "message" = "" }>
+
+        <cftry>
+            <cfquery name="qryUpdate" datasource="#application.datasource#">
+                UPDATE users
+                SET is_registered = <cfqueryparam value="#arguments.approval_status#" cfsqltype="cf_sql_integer">
+                WHERE user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+            <cfset result.success = true>
+            <cfset result.message = "User approval status updated successfully.">
+            <cfcatch>
+                <cfset result.message = "Error updating user approval status: #cfcatch.message#">
+            </cfcatch>
+        </cftry>
+        <cfreturn result>
+    </cffunction>
+
     <cffunction name="getUsers" access="public" returntype="query">
         <cfargument name="draw" type="numeric" required="true">
         <cfargument name="start" type="numeric" required="true">    
@@ -159,7 +197,8 @@
                 users.email,
                 roles.name as role,
                 access_levels.name as access_level,
-                users.is_registered
+                users.is_registered,
+                users.is_public_registration
             FROM users
             LEFT JOIN roles ON users.role_id = roles.role_id
             LEFT JOIN access_levels ON users.access_level_id = access_levels.access_level_id
@@ -168,6 +207,8 @@
                 AND users.is_registered = 0
             <cfelseif type eq "completed">
                 AND users.is_registered = 1
+            <cfelseif type eq "rejected">
+                AND users.is_registered = 2
             </cfif>
             <cfif searchValue neq "">
                 AND (users.first_name LIKE '%#searchValue#%' OR users.last_name LIKE '%#searchValue#%' OR users.email LIKE '%#searchValue#%')

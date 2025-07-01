@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     registration_token VARCHAR(255),
     token_expiry DATETIME,
     is_registered BOOLEAN DEFAULT FALSE,
+    is_public_registration BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (role_id) REFERENCES roles(role_id),
     FOREIGN KEY (access_level_id) REFERENCES access_levels(access_level_id)
 );
