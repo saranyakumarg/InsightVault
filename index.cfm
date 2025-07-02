@@ -4,11 +4,43 @@
     <cfset variables.route = "login">
 </cfif>
 
-<cfif structKeyExists(session, "user")>
-    <cfset variables.route = variables.route>
-<cfelse>        
-    <cfset variables.route = "login">
+<!--- Define route access rules for each role --->
+<cfset variables.publicRoutes = [
+    "login", "register", "complete-registration", "set-password", "errors"
+]>
+<cfset variables.adminRoutes = [
+    "dashboard", "users-all", "user-create", "edit-user", "tag-all", "category-all", "content-all", "content-pending", "content-create", "content-edit", "content", "full-content"
+]>
+<cfset variables.contributorRoutes = [
+    "dashboard", "content-all", "content-pending", "content-create", "content-edit", "content", "full-content"
+]>
+<cfset variables.userRoutes = [
+    "dashboard", "content", "full-content"
+]>
+
+<cfif !structKeyExists(session, "user")>
+    <cfif !arrayFindNoCase(variables.publicRoutes, variables.route)>
+        <cfset variables.route = "login">
+    </cfif>
+<cfelse>
+    <cfset variables.userRole = lcase(session.user.role)>
+    <cfif variables.userRole EQ "admin">
+        <cfif !arrayFindNoCase(variables.adminRoutes, variables.route) && !arrayFindNoCase(variables.publicRoutes, variables.route)>
+            <cfset variables.route = "errors">
+        </cfif>
+    <cfelseif variables.userRole EQ "contributor">
+        <cfif !arrayFindNoCase(variables.contributorRoutes, variables.route) && !arrayFindNoCase(variables.publicRoutes, variables.route)>
+            <cfset variables.route = "errors">
+        </cfif>
+    <cfelseif variables.userRole EQ "user">
+        <cfif !arrayFindNoCase(variables.userRoutes, variables.route) && !arrayFindNoCase(variables.publicRoutes, variables.route)>
+            <cfset variables.route = "errors">
+        </cfif>
+    <cfelse>
+        <cfset variables.route = "errors">
+    </cfif>
 </cfif>
+
 <cfset variables.title = "">
 
 <cfswitch expression="#variables.route#"> 
