@@ -9,7 +9,12 @@
         <cfcase value="3">
             <cfset errorMessage = "You have already completed registration. Please login to continue.">
         </cfcase>
+        <cfdefaultcase>
+            <cfset errorMessage = "Access Denied!! You do not have permission to access this page.">
+        </cfdefaultcase>
     </cfswitch>
+<cfelse>
+    <cfset errorMessage = "Access Denied!! You do not have permission to access this page.">
 </cfif>
 
 <cfinclude  template="../shared/head.cfm">
