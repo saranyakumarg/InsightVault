@@ -41,12 +41,11 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="accessLevel" class="form-label">Access Level</label>
-                                <cfselect name="accessLevel" class="form-select" multiple="true" required="true">
-                                        <option value="all">All employees</option>
-                                        <option value="hr">HR</option>
-                                        <option value="developer">Developer</option>
-                                        <option value="qa">QA</option>
-                                        <option value="manager">Manager</option>
+                                <cfselect name="accessLevel" class="form-select" >
+                                    <option value="" disabled selected>Select Access Level</option>
+                                    <cfloop query="variables.accessLevels">
+                                        <option value="#variables.accessLevels.access_level_id#">#variables.accessLevels.name#</option>
+                                    </cfloop>
                                 </cfselect>
                             </div>
                             <div class="col-md-6">
