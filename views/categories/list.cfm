@@ -12,13 +12,13 @@
                 
                 <div class="tab-content rounded-bottom">
                   <div class="tab-pane active preview" role="tabpanel" id="preview-1007">
-                    <div class="text-end mb-3">
+                    <div class="mb-3 d-flex justify-content-end align-items-center gap-3">
                         <button type="button" class="btn btn-primary" data-coreui-toggle="modal" data-coreui-target="##categoryForm">
                             <i class="icon cil-plus"></i> Add Category
                         </button>
                         <cfinclude  template="form.cfm">
                     </div>
-                    <table id="categoryTable" class="table table-striped table-hover">
+                    <table id="categoryTable" class="display table table-striped table-hover">
                       <thead>
                         <tr>
                           <th scope="col">##</th>
