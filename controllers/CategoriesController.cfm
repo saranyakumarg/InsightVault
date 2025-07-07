@@ -4,7 +4,7 @@
 </cfif>
 <cfscript>
     //get category model
-    variables.categoryModal = createObject("component", application.baseUrl & "models.CategoryModal");
+    variables.categoryModel = createObject("component", application.baseUrl & "models.CategoryModel");
     if(structKeyExists(url, "method")){
         switch(url.method){
             case "get-category":
@@ -25,8 +25,8 @@
         var orderDir = structKeyExists(url, "order[0][dir]") ? url["order[0][dir]"] : "asc";
         var columnMap = ["category_id", "name", "slug"];
         var orderColumn = columnMap[orderColumnIndex +1];
-        var totalRecords = variables.categoryModal.getTotalCategoryCount();
-        var categories = variables.categoryModal.getCategory(draw, start, length,searchValue, orderColumn, orderDir, columnMap,totalRecords);
+        var totalRecords = variables.categoryModel.getTotalCategoryCount();
+        var categories = variables.categoryModel.getCategory(draw, start, length,searchValue, orderColumn, orderDir, columnMap,totalRecords);
         var data=[];
         for (var i=1; i <=categories.recordCount; i++) {
             var category = {
@@ -34,12 +34,17 @@
                 "name": categories["name"][i],
                 "slug": categories["slug"][i]
             };
-            var actions=categories["name"][i];
+            var editAction = "#application.baseURL#?page=edit-category&id=#category.category_id#";
+            var actions = "
+                <button class='delete-btn' title='Delete' onclick=""confirmModal('delete', #category.category_id#)"">
+                    <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##staticBackdrop'></i>
+                </button>
+            ";
             arrayAppend(data, {
                 "category_id": category.category_id,
                 "name": category.name,
-                "slug":category.slug
-        
+                "slug":category.slug,
+                "actions": actions
             });
         }
         writeOutput(serializeJSON({
