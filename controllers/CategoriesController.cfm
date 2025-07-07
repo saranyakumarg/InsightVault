@@ -10,12 +10,19 @@
             case "get-category":
                 getCategory();
                 break;
+            case "edit-category":
+                editCategory();
+                break;
             default:
                 writeOutput(serializeJSON({ "success": false, "message": "Unknown method: " & url.method }));
                 break;
         }
     }
 
+
+    function editCategory(){
+        
+    }
     function getCategory(){
         var draw = structKeyExists(url, "draw") ? url.draw : 0;
         var start= structKeyExists(url, "start") ? url.start : 0;
@@ -36,6 +43,9 @@
             };
             var editAction = "#application.baseURL#?page=edit-category&id=#category.category_id#";
             var actions = "
+                <button class='edit-btn' title='Edit User' onclick='window.location.href=""#editAction#""'>
+                    <i class='icon cil-pencil'></i>
+                </button>
                 <button class='delete-btn' title='Delete' onclick=""confirmModal('delete', #category.category_id#)"">
                     <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##staticBackdrop'></i>
                 </button>

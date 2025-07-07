@@ -18,7 +18,7 @@
         <cfquery name="qryCategory" datasource="#application.datasource#">
         select categories.category_id,categories.name,categories.slug from categories where 1=1
         <cfif searchValue neq "">
-                AND (categories.name LIKE '%#searchValue#%' OR categories.slug LIKE '%#searchValue#%')
+                AND (categories.name LIKE '%#searchValue#%' OR categories.slug LIKE '%#searchValue#%' OR categories.category_id LIKE '%#searchValue#%')
         </cfif>
             ORDER BY #orderColumn# #orderDir#
             LIMIT #start#, #length#
