@@ -24,6 +24,7 @@
                           <th scope="col">##</th>
                           <th scope="col">name</th>
                           <th scope="col">slug</th>
+                          <th scope="col">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
