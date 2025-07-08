@@ -13,6 +13,9 @@
             case "edit-category":
                 editCategory();
                 break;
+            case "save-category":
+                saveCategory();
+                break;
             default:
                 writeOutput(serializeJSON({ "success": false, "message": "Unknown method: " & url.method }));
                 break;
@@ -20,9 +23,7 @@
     }
 
 
-    function editCategory(){
-        
-    }
+   
     function getCategory(){
         var draw = structKeyExists(url, "draw") ? url.draw : 0;
         var start= structKeyExists(url, "start") ? url.start : 0;
@@ -64,5 +65,14 @@
             "data":data
         }));
       
+    }
+
+    function saveCategory(){
+        var userData={
+            name:structKeyExists(form, "name") ? form.name:"",
+            slug:structKeyExists(form, "slug") ? form.slug:""
+        };
+        var response=variables.categoryModel.saveCategory(userData);
+        writeOutput(serializeJSON(response));
     }
 </cfscript>

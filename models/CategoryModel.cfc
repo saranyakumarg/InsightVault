@@ -25,4 +25,37 @@
         </cfquery>
         <cfreturn qryCategory>
     </cffunction>
+
+    <cffunction  name="saveCategory" access="public" returnType="struct">
+        <cfargument name="userData" type="struct" required="true">
+        <cfset var result={success=false,message = "" }>
+
+        <cfif structKeyExists(userData, "name")and structKeyExists(userData, "slug")
+        and trim(userData.name) NEQ "" and trim(userData.slug) NEQ "">
+            <cfif NOT structKeyExists(userData, "slug") OR trim(userData.slug) EQ "">
+                <cfset result.message = "Slug is required and cannot be empty.">
+            <cfreturn result>
+            </cfif>
+
+            <cfquery name="checkslug" datasource="#application.datasource#">
+                select slug from categories where 
+                 slug=<cfqueryparam value="#userData.slug#" cfsqltype="cf_sql_varchar">  
+            </cfquery>
+            <cfif checkslug.recordCount GT 0>
+                <cfset result.message="slug already exists.Please use another">
+                <cfreturn result>  
+            </cfif>
+        <cfquery name="qryCategory"  datasource="#application.datasource#">
+                insert into categories(name,slug) values(
+                    <cfqueryparam value="#userData.name#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#userData.slug#" cfsqltype="cf_sql_varchar">     
+                )
+        </cfquery> 
+        <cfset result.message = "User saved successfully">
+        <cfset result.success = true>
+        <cfelse>
+            <cfset result.message="">
+        </cfif>      
+        <cfreturn result> 
+    </cffunction>
 </cfcomponent>
