@@ -6,8 +6,9 @@ document.getElementById('name').addEventListener('input', function() {
 
 $(document).ready(function() {
     var baseURL = document.getElementById("appConfig").getAttribute("data-baseurl");
+   
+    //category List
     $('#categoryTable').DataTable({
-        // "retrieve": true,
         serverSide: true, 
         processing:true, 
         scrollY: "480px", // Set fixed table height
@@ -35,10 +36,11 @@ $(document).ready(function() {
 
         const nameInput=$('#name');
         const formData={
-           Name: $('#name').val(),
-            slug:$('#slug').val()
+            Name: $('#name').val(),
+            slug:$('#slug').val(),
+            categoryId:$('#category_id').val()
         }
-
+        
         let isValid = true;
         if(!formData.Name.trim()){
             nameInput.addClass('is-invalid');
@@ -58,10 +60,8 @@ $(document).ready(function() {
         const value = $(this).val().trim();
         if (value) {
             $(this).removeClass('is-invalid').addClass('is-valid');
-            errorText.text('');
         } else {
             $(this).removeClass('is-valid').addClass('is-invalid');
-            errorText.text('Please enter name');
         }
         })
 
@@ -72,13 +72,15 @@ $(document).ready(function() {
                 data: formData,
                 success: function(response) {
                     var jsonResponse = JSON.parse(response); 
+                     const isEdit=formData.categoryId && formData.categoryId.trim().length > 0;
+                        const message = isEdit ? "Category updated successfully!":"Category added successfully!";
                     if (jsonResponse.SUCCESS) {
-                        showToast("category", "category added successfully!","success");
+                    showToast("category", message, "success");
                         setTimeout(function () {
                             window.location.href = baseURL + '?page=category-all';
                         }, 1000);
                     } else {
-                        showToast("category", jsonResponse.message, "danger");
+                        ("category", jsonResponse.message, "danger");
                     }
                 },
                 error: function(xhr, status, error) {
@@ -86,7 +88,60 @@ $(document).ready(function() {
                 }
             });
         }
-        
     
     });
+
+    $(document).on('click', '.delete-btn', function () {
+        var category_id = $(this).data('id');
+        $('#category_id').val(category_id);
+        $('#categorymodalConfirm').off('click').on('click', function() {console.log(1);
+                deleteCategory(category_id);
+        });
+    })
+    
+     $('.add-btn').on('click', function () {
+        $('#categoryFormElement')[0].reset();
+        $('#categoryId').val('');   
+        $('#categoryForm').modal('show');
+    });
+    
+    //delete category
+
+    function deleteCategory(category_id){console.log(2);
+        $.ajax({  
+            url: baseURL + 'controllers/CategoriesController.cfm?method=delete-category',
+            type:'POST',
+            dataType: 'json',
+            data:{category_id:category_id},
+            success: function(response) {
+            if(response.success){
+                console.log(3);
+                    $('#categoryDeleteModal').modal('hide');
+                    showToast("category", "category deleted successfully!","success");
+                    setTimeout(function () {
+                            window.location.href = baseURL + '?page=category-all';
+                        }, 1000);
+                } else {
+                    showToast("User", response.message, "danger");
+                }
+            },
+            error: function(xhr, status, error) {console.log(4);
+                alert("An error occurred while deleting the category: " + error);
+            }
+        });
+    }
+    //edit category
+   $(document).on('click', '.edit-btn', function () {
+        const categoryId = $(this).data("id");
+        const categoryName=$(this).data("name");
+        const categorySlug=$(this).data("slug");
+       
+        $("#category_id").val(categoryId);
+        $("#name").val(categoryName);
+        $("#slug").val(categorySlug);
+        $('#name').removeClass('is-invalid is-valid');
+        $('#validationError').text('');
+        $("#categoryForm").modal('show');
+        $(".modal-title").text('Edit Category');
+    });  
 });
