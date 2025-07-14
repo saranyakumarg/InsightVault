@@ -5,13 +5,14 @@
 <cfscript>
     //get category model
     variables.categoryModel = createObject("component", application.baseUrl & "models.CategoryModel");
+
     if(structKeyExists(url, "method")){
         switch(url.method){
             case "get-category":
                 getCategory();
                 break;
-            case "edit-category":
-                editCategory();
+            case "delete-category":
+                deleteCategory();
                 break;
             case "save-category":
                 saveCategory();
@@ -42,16 +43,16 @@
                 "name": categories["name"][i],
                 "slug": categories["slug"][i]
             };
-            var editAction = "#application.baseURL#?page=edit-category&id=#category.category_id#";
+            // var editAction = "#application.baseURL#?page=edit-category&id=#category.category_id#";
             var actions = "
-                <button class='edit-btn' title='Edit User' onclick='window.location.href=""#editAction#""'>
-                    <i class='icon cil-pencil'></i>
+                <button class='edit-btn' title='Edit User' data-id='#category.category_id#' data-name='#category.name#' data-slug='#category.slug#'>
+                    <i class='icon cil-pencil'  data-coreui-target='##categoryForm' data-coreui-toggle='modal'></i>
                 </button>
-                <button class='delete-btn' title='Delete' onclick=""confirmModal('delete', #category.category_id#)"">
-                    <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##staticBackdrop'></i>
+                 <button class='delete-btn' title='Delete' data-id='#category.category_id#'>
+                    <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##categoryDeleteModal'></i>
                 </button>
             ";
-            arrayAppend(data, {
+            arrayAppend(data, { 
                 "category_id": category.category_id,
                 "name": category.name,
                 "slug":category.slug,
@@ -69,10 +70,47 @@
 
     function saveCategory(){
         var userData={
-            name:structKeyExists(form, "name") ? form.name:"",
-            slug:structKeyExists(form, "slug") ? form.slug:""
+            name:structKeyExists(form, "name") ? trim(form.name):"",
+            slug:structKeyExists(form, "slug") ? trim(form.slug):""
         };
+
+        if(structKeyExists(form, "categoryId")and len(trim(form.categoryId))){
+            userData.categoryId=trim(form.categoryId);
+        }
         var response=variables.categoryModel.saveCategory(userData);
         writeOutput(serializeJSON(response));
     }
+
+    function deleteCategory(){
+        var result={success:false,"message":""};
+        var category_id=form.category_id;
+        if(!len(category_id)){
+            writeOutput(serializeJSON({"success":false, "message":"category_id is required"}));
+            return;
+        }
+        var categoryQuery=variables.categoryModel.getCategoryById(category_id);
+        if(!isQuery(categoryQuery)||categoryQuery.recordCount EQ 0){
+            writeOutput(serializeJSON({"success":false, "message":"category not found"}));
+            return;
+        }
+
+        var deleteQry=queryNew('');
+        var deleteQry=queryExecute(
+            "delete from categories where category_id=?",
+            [
+                {value=category_id,cfsqltype="cf_sql_integer"}
+            ],
+            {datasource=application.datasource}
+        );
+        result.success=true;
+        if(result.success){
+            writeOutput(serializeJSON({"success":true,"message":"Category deleted successfully"}));
+        }
+        else{
+            writeOutput(serializeJSON({"success":false,"message":result.message?: "failed to delete category."}));
+        }
+
+    }
+   
+    
 </cfscript>

@@ -8,6 +8,7 @@
       </div>
       <div class="modal-body">
         <form id="categoryFormElement">
+          <input type="hidden" name="category_id" id="category_id" value="">
             <div class="mb-3">
                 <div class="row mb-3">
                     <label for="name" class="col-sm-2 col-form-label">Name</label>
