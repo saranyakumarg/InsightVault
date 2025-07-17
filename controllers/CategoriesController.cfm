@@ -73,7 +73,6 @@
             name:structKeyExists(form, "name") ? trim(form.name):"",
             slug:structKeyExists(form, "slug") ? trim(form.slug):""
         };
-
         if(structKeyExists(form, "categoryId")and len(trim(form.categoryId))){
             userData.categoryId=trim(form.categoryId);
         }

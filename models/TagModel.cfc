@@ -18,7 +18,7 @@
         <cfquery name="qryTags" datasource="#application.datasource#">
         select tags.tag_id,tags.slug from tags
         <cfif searchValue neq "">
-                AND (tags.name LIKE '%#searchValue#%')
+                AND (tags.slug LIKE '%#searchValue#%')
         </cfif>
             ORDER BY #orderColumn# #orderDir#
             LIMIT #start#, #length#
@@ -26,30 +26,80 @@
         <cfreturn qryTags>
 </cffunction>
 
-<cffunction  name="saveTags" access="public" returnType="struct">
+<cffunction  name="getTagById" access="public" returnType="query">
+        <cfargument  name="id" type="numeric" required="true">
+        <cfquery name="qryTag" datasource="#application.datasource#">
+            select * from tags where 
+            tag_id=<cfqueryparam value="#id#" cfsqltype="cf_sql_integer">
+        </cfquery>
+        <cfreturn qryTag>
+</cffunction>
+
+<cffunction  name="saveTags" access="public" returnType="any">
     <cfargument  name="TagData" type="any" required="true">
     <cfset result={success:false, message=""}>
-    <cfif structKeyExists(TagData, "tags") and arrayLen(TagData.tags) NEQ "">
-        <cfloop array="#TagData.tags#" index="tag">
-        <cfquery name="checkSlug" datasource="#application.datasource#">
-            select slug from tags where
-            slug=<cfqueryparam value="#tag#" cfsqltype="cf_sql_varchar">
-        </cfquery>
-        <cfif checkSlug.recordCount GT 0>
-            <cfset result.message="Tag is already used.Please use another">
-            <cfreturn result>
-        </cfif>
-        <cfquery name="qryTags" datasource="#application.datasource#">
-            insert into tags(slug) values(
-                <cfqueryparam value="#tag#" cfsqltype="cf_sql_varchar">
-            )
-        </cfquery>
-        </cfloop>
-        <cfset result.message="Tags added successfully">
-        <cfset result.success=true>
+    <cfif structKeyExists(TagData, "tagId")and len(trim(TagData.tagId))>
+            <cfquery name="qryTags" datasource="#application.datasource#">
+                UPDATE tags SET
+                tags=<cfqueryparam value="#TagData.tags#" cfsqltype="cf_sql_varchar">
+                WHERE tag_id = <cfqueryparam value="#TagData.tagId#" cfsqltype="cf_sql_integer">
+            </cfquery>
+            <cfset result.message = "Tag updated successfully">
+            <cfset result.success = true>
+    <cfelse>
+        <cfif structKeyExists(TagData, "tags")>
+            <cfif NOT isArray(TagData.tags)>
+                <cfif len(trim(TagData.tags))>
+                <cfset TagData.tags = listToArray(TagData.tags, ",")>
+                <cfelse>
+                    <cfset result.message="No tags provided">
+                    <cfset result.success=true>
+                    <cfreturn result>
+                </cfif>
+            </cfif>
+            <cfif arraylen(TagData.tags)>
+                <cfset TagData.slug = arrayToList(TagData.tags, ",")>
+                <cfloop array="#TagData.tags#" index="tag">
+                    <cfquery name="checkSlug" datasource="#application.datasource#">
+                        select slug from tags where
+                        slug=<cfqueryparam value="#tag#" cfsqltype="cf_sql_varchar">
+                    </cfquery>
+                    <cfif checkSlug.recordCount GT 0>
+                        <cfset result.message="Tag is already used.Please use another">
+                        <cfreturn result>
+                    </cfif>
+                    <cfquery name="qryTags" datasource="#application.datasource#">
+                        insert into tags(slug) values(
+                            <cfqueryparam value="#tag#" cfsqltype="cf_sql_varchar">
+                        )
+                    </cfquery>
+                </cfloop>                   
+                <cfset result.message="Tags added successfully">
+                <cfset result.success=true>
+            <cfelse>
+                <cfset result.message="No valid tag to add">
+            </cfif>
         <cfelse>
             <cfset result.message="">
+        </cfif>
     </cfif>
     <cfreturn result>
+</cffunction>
+
+<cffunction  name="deleteTag">
+        <cfargument name="tag_id" type="numeric" required="true">
+        <cfset var result = { "success" = false, "message" = "" }>
+        <cftry>
+            <cfquery name="qryDelete" datasource="#application.datasource#">
+                DELETE FROM tags
+                WHERE tag_id = <cfqueryparam value="#arguments.tag_id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+                <cfset result.success = true>
+                <cfset result.message = "tag deleted successfully.">
+            <cfcatch>
+                <cfset result.message = "Error deleting tag: #cfcatch.message#">
+            </cfcatch>
+        </cftry>
+        <cfoutput>#serializeJSON(result)#</cfoutput>
 </cffunction>
 </cfcomponent>

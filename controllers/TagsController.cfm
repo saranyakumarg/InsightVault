@@ -13,6 +13,9 @@
             case "save-Tags":
                 saveTags();
                 break;
+            case "delete-Tag":
+                deleteTag();
+                break;
             default:
                 writeOutput(serializeJSON({"success":false,"message":"unkknown method" &url.method}));
                 break;
@@ -36,13 +39,12 @@
                 "tag_id": Tags["tag_id"][i],
                 "slug": Tags["slug"][i]
             };
-            // var editAction = "#application.baseURL#?page=edit-category&id=#category.category_id#";
             var actions = "
                 <button class='edit-btn' title='Edit User' data-id='#Tag.tag_id#' data-slug='#Tag.slug#'>
-                    <i class='icon cil-pencil'  data-coreui-target='##categoryForm' data-coreui-toggle='modal'></i>
+                    <i class='icon cil-pencil'  data-coreui-target='##tagForm' data-coreui-toggle='modal'></i>
                 </button>
                  <button class='delete-btn' title='Delete' data-id='#Tag.tag_id#'>
-                    <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##categoryDeleteModal'></i>
+                    <i class='icon cil-trash' data-coreui-toggle='modal' data-coreui-target='##TagDeleteModal'></i>
                 </button>
             ";
             arrayAppend(data, { 
@@ -61,11 +63,47 @@
 
     function saveTags(){
         var TagData={
-            Tags:structKeyExists(form, "Tags") ? listToArray(trim(form.Tags)) : []
+            tags: structKeyExists(form, "tags") ? listToArray(form.tags) : []
         };
-
+        
+        if(structKeyExists(form, "tagId")and len(trim(form.tagId))){
+            TagData.tagId=trim(form.tagId);
+        }
         var response=variables.TagModel.saveTags(TagData);
         writeOutput(serializeJSON(response));
+    }
+
+
+
+    function deleteTag(){
+        var result={success:false,"message":""};
+        var tag_id=form.tag_id;
+        if(!len(tag_id)){
+            writeOutput(serializeJSON({"success":false, "message":"tag_id is required"}));
+            return;
+        }
+        var tagQuery=variables.TagModel.getTagById(tag_id);
+        if(!isQuery(tagQuery)||tagQuery.recordCount EQ 0){
+            writeOutput(serializeJSON({"success":false, "message":"tag not found"}));
+            return;
+        }
+
+        var deleteQry=queryNew('');
+        var deleteQry=queryExecute(
+            "delete from tags where tag_id=?",
+            [
+                {value=tag_id,cfsqltype="cf_sql_integer"}
+            ],
+            {datasource=application.datasource}
+        );
+        result.success=true;
+        if(result.success){
+            writeOutput(serializeJSON({"success":true,"message":"tag deleted successfully"}));
+        }
+        else{
+            writeOutput(serializeJSON({"success":false,"message":result.message?: "failed to delete tag."}));
+        }
+
     }
 
 </cfscript>

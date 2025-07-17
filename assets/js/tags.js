@@ -55,31 +55,54 @@ $(document).ready(function(){
 
     })
 
-    $('#tagForm').on("submit",function(event){
+    $('#tagFormElement').on("submit",function(event){
         event.preventDefault();
 
-        const $tagContainer = $('#tags');
-        const $tagSpans = $tagContainer.parent().find('.badge');
-
+        const $tagInput = $('#tags');
+        const $tagSpans = $tagInput.parent().find('.badge');
         const tagsArray = $tagSpans.map(function() {
-            return $(this).children().first().text().trim();
+            return $(this).text().trim();
         }).get().filter(function(tag) {
             return tag.length > 0;
         });
-        if (tagsArray.length === 0) {
-            alert("Please enter at least one tag.");
-            return;
+
+        let isValid = true;
+        if (!$tagInput.length) {
+            $tagInput.addClass('is-invalid');
+            $('#validationError').text("Please enter tag");
+             isValid=false;
+        } else{
+             $tagInput.removeClass('is-invalid').addClass('is-valid');
         }
 
+         $('#closeBtn').click(function(){
+            $tagInput.removeClass('is-invalid');
+        })
 
-        $.ajax({
+        
+        //Real time validation      
+        $tagInput.on("input", function () {
+        const value = $(this).val().trim();
+        if (value) {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        } else {
+            $(this).removeClass('is-valid').addClass('is-invalid');
+        }
+        })
+
+        const tagId=$('#tag_id').val();
+        const isEdit=tagId.trim().length > 0;
+        if(isValid){
+            $.ajax({
                 url: baseURL + 'controllers/TagsController.cfm?method=save-Tags',
                 type: 'POST',
-                dataType: 'json',
-                data:{ Tags: tagsArray.join(',') },
-                success: function(response) { 
-                    const message = "Tag added successfully!";
-                   if(response.success){
+                dataType:'JSON',    
+                data:{Tags:tagsArray.join(','),
+                    tagId:tagId
+                },
+                success: function(response) {
+                    const message =isEdit ? "Tag updated successfully!": "Tag added successfully";
+                    if(response.SUCCESS){
                     showToast("Tags", message, "success");
                         setTimeout(function () {
                             window.location.href = baseURL + '?page=tag-all';
@@ -87,11 +110,62 @@ $(document).ready(function(){
                     } else {
                         showToast("Tags", "failed to save tags", "danger");
                     }
-                },
-                error: function(xhr, status, error) {
-                    alert('Error in saving Tag: ' + error);
+                    
                 }
+                
             });
+        }
+    })
+
+
+    //delete tag
+
+    $(document).on('click', '.delete-btn', function () {
+        var tag_id = $(this).data('id');
+        $('#tag_id').val(tag_id);
+        $('#tagmodalConfirm').off('click').on('click', function() {
+                deleteTag(tag_id);
+        });
+    })
+
+     $('.add-btn').on('click', function () {
+        $('#tagFormElement')[0].reset();
+        $('#tagId').val('');   
+        $('#tagForm').modal('show');
+    });
+    function deleteTag(tag_id){
+        $.ajax({  
+            url: baseURL + 'controllers/TagsController.cfm?method=delete-Tag',
+            type:'POST',
+            dataType: 'json',
+            data:{tag_id:tag_id},
+            success: function(response) {
+                console.log(response.success);
+            if(response.success){
+                    $('#TagDeleteModal').modal('hide');
+                    showToast("Tags", "Tag deleted successfully!","success");
+                    setTimeout(function () {
+                            window.location.href = baseURL + '?page=tag-all';
+                        }, 1000);
+                } else {
+                    showToast("Tags", response.message, "danger");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("An error occurred while deleting the tag: " + error);
+            }
+        });
+    }
+
+    //edit tag
+    $(document).on('click','.edit-btn',function(){
+        const tagId=$(this).data("id");
+        const tagSlug=$(this).data("slug");
+
+        $("#tag_id").val(tagId);
+        $("#tags").val(tagSlug);
+         $("#tagForm").modal('show');
+        $(".modal-title").text('Edit Tag');
     })
 })
 
