@@ -36,6 +36,7 @@ $(document).ready(function(){
         serverSide:true,
         processing:true,
         scrollY: "480px", 
+        order: [[0, 'desc']],//sort by first column in desc order
         ajax:{
             url: baseURL + "controllers/TagsController.cfm?method=get-Tags",
             dataSrc: "data",
@@ -57,22 +58,41 @@ $(document).ready(function(){
 
     $('#tagFormElement').on("submit",function(event){
         event.preventDefault();
-
-        const $tagInput = $('#tags');
+        const tagId=$('#tag_id').val();
+        const isEdit = tagId.length > 0;
+        const $tagInput = isEdit ? $('#update_tag') : $('#tags');
         const $tagSpans = $tagInput.parent().find('.badge');
-        const tagsArray = $tagSpans.map(function() {
+        let tagsArray = $tagSpans.map(function() {
             return $(this).text().trim();
         }).get().filter(function(tag) {
             return tag.length > 0;
         });
 
+        const inputValue = $tagInput.val().trim();
+        if (inputValue.length > 0 && !tagsArray.includes(inputValue)) {
+            tagsArray.push(inputValue);
+        }
+
+
+        const regex = /^[a-zA-Z0-9_-]+$/;
         let isValid = true;
-        if (!$tagInput.length) {
+        if (!tagsArray.length) {
             $tagInput.addClass('is-invalid');
             $('#validationError').text("Please enter tag");
              isValid=false;
         } else{
-             $tagInput.removeClass('is-invalid').addClass('is-valid');
+            for(tag of tagsArray){
+                if(!regex.test(tag)){
+                    $tagInput.addClass('is-invalid');
+                    $('#validationError').text("Tags must only contain letters, numbers, hyphens, or underscores.");
+                    isValid=false;
+                    break;
+                }
+            }
+            
+            if(isValid){
+                $tagInput.removeClass('is-invalid').addClass('is-valid');
+            }
         }
 
          $('#closeBtn').click(function(){
@@ -90,14 +110,21 @@ $(document).ready(function(){
         }
         })
 
-        const tagId=$('#tag_id').val();
-        const isEdit=tagId.trim().length > 0;
+
+        var tags="";
+        if(isEdit) {
+            tags = $('#update_tag').val();
+             
+        } else {
+            tags = tagsArray.join(',');
+        }
+
         if(isValid){
             $.ajax({
                 url: baseURL + 'controllers/TagsController.cfm?method=save-Tags',
                 type: 'POST',
                 dataType:'JSON',    
-                data:{Tags:tagsArray.join(','),
+                data:{Tags:tags,
                     tagId:tagId
                 },
                 success: function(response) {
@@ -129,9 +156,13 @@ $(document).ready(function(){
     })
 
      $('.add-btn').on('click', function () {
+         $('#tags').css('display', 'block');
+         $('#update_tag').css('display', 'none');
+        $(".modal-title").text('Add Tag');
+        $("#tag_id").val('');
         $('#tagFormElement')[0].reset();
-        $('#tagId').val('');   
         $('#tagForm').modal('show');
+        $('.form-text.comment').show();
     });
     function deleteTag(tag_id){
         $.ajax({  
@@ -159,12 +190,17 @@ $(document).ready(function(){
 
     //edit tag
     $(document).on('click','.edit-btn',function(){
+        $('#update_tag').css('display', 'block');
+        $('#tags').css('display', 'none');
+        $('.form-text.comment').hide();
         const tagId=$(this).data("id");
         const tagSlug=$(this).data("slug");
 
         $("#tag_id").val(tagId);
-        $("#tags").val(tagSlug);
-         $("#tagForm").modal('show');
+        $("#update_tag").val(tagSlug);
+        $('#update_tag').removeClass('is-invalid is-valid');
+        $('#validationError').text('');
+        $("#tagForm").modal('show');
         $(".modal-title").text('Edit Tag');
     })
 })

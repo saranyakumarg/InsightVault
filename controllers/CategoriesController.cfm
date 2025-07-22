@@ -5,7 +5,7 @@
 <cfscript>
     //get category model
     variables.categoryModel = createObject("component", application.baseUrl & "models.CategoryModel");
-
+    variables.auditLogModel = createObject("component", application.baseURL & "models.AuditLogModel");
     if(structKeyExists(url, "method")){
         switch(url.method){
             case "get-category":
@@ -73,10 +73,23 @@
             name:structKeyExists(form, "name") ? trim(form.name):"",
             slug:structKeyExists(form, "slug") ? trim(form.slug):""
         };
+
         if(structKeyExists(form, "categoryId")and len(trim(form.categoryId))){
             userData.categoryId=trim(form.categoryId);
         }
         var response=variables.categoryModel.saveCategory(userData);
+
+        var auditAction = "category Created By Admin";
+        var auditDetails = "category " & userData.name & " created";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "categories",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
         writeOutput(serializeJSON(response));
     }
 
@@ -93,6 +106,8 @@
             return;
         }
 
+
+       
         var deleteQry=queryNew('');
         var deleteQry=queryExecute(
             "delete from categories where category_id=?",
@@ -102,6 +117,19 @@
             {datasource=application.datasource}
         );
         result.success=true;
+         // Audit log for deletion
+        var auditAction = "category Deleted By Admin";
+        var auditDetails = "category with ID" & category_id & " deleted by admin.";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "categories",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
+
         if(result.success){
             writeOutput(serializeJSON({"success":true,"message":"Category deleted successfully"}));
         }

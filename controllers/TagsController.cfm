@@ -5,6 +5,7 @@
 
 <cfscript>
     variables.TagModel=createObject("component",application.baseUrl & "models.TagModel");
+    variables.auditLogModel = createObject("component", application.baseURL & "models.AuditLogModel");
     if (structKeyExists(url, "method")){
         switch(url.method){
             case "get-Tags":
@@ -70,6 +71,25 @@
             TagData.tagId=trim(form.tagId);
         }
         var response=variables.TagModel.saveTags(TagData);
+
+        if (isArray(TagData.tags)) {
+            tagNames = arrayToList(TagData.tags, ", ");
+        } else {
+            tagNames = TagData.tags; // assuming it's already a string
+        }
+
+        //Audit action for tags
+        var auditAction = "Tag created by admin";
+        var auditDetails = "Tag " & tagNames & " added";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "Tags",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        }
+        variables.auditLogModel.saveAuditLog(auditData);
         writeOutput(serializeJSON(response));
     }
 
@@ -97,6 +117,17 @@
             {datasource=application.datasource}
         );
         result.success=true;
+        var auditAction = "Tag Deleted By Admin";
+        var auditDetails = "Tag with ID" & tag_id & " deleted by admin.";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "categories",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
         if(result.success){
             writeOutput(serializeJSON({"success":true,"message":"tag deleted successfully"}));
         }

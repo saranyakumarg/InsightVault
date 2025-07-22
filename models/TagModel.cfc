@@ -16,9 +16,9 @@
         <cfargument name="totalRecords" type="any" required="true">
         <cfargument name="tag_id" type="numeric" required="true">
         <cfquery name="qryTags" datasource="#application.datasource#">
-        select tags.tag_id,tags.slug from tags
+        select tags.tag_id,tags.slug from tags 
         <cfif searchValue neq "">
-                AND (tags.slug LIKE '%#searchValue#%')
+                where tags.slug LIKE <cfqueryparam value= "%#searchValue#%" cfsqltype="cf_sql_varchar">
         </cfif>
             ORDER BY #orderColumn# #orderDir#
             LIMIT #start#, #length#
@@ -35,13 +35,16 @@
         <cfreturn qryTag>
 </cffunction>
 
-<cffunction  name="saveTags" access="public" returnType="any">
+<cffunction  name="saveTags" access="public" returnType="struct">
     <cfargument  name="TagData" type="any" required="true">
     <cfset result={success:false, message=""}>
     <cfif structKeyExists(TagData, "tagId")and len(trim(TagData.tagId))>
+            <cfset TagData.tags = ( structKeyExists(form, "tags") AND isSimpleValue(form.tags) AND len(trim(form.tags))) 
+                            ? listFirst(form.tags) : ""> 
+<!---      <cfdump  var="#TagData.tags#" abort> --->
             <cfquery name="qryTags" datasource="#application.datasource#">
                 UPDATE tags SET
-                tags=<cfqueryparam value="#TagData.tags#" cfsqltype="cf_sql_varchar">
+                slug=<cfqueryparam value="#TagData.tags#" cfsqltype="cf_sql_varchar">
                 WHERE tag_id = <cfqueryparam value="#TagData.tagId#" cfsqltype="cf_sql_integer">
             </cfquery>
             <cfset result.message = "Tag updated successfully">
