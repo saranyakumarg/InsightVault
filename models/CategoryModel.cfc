@@ -18,10 +18,14 @@
         <cfquery name="qryCategory" datasource="#application.datasource#">
         select categories.category_id,categories.name,categories.slug from categories
         <cfif searchValue neq "">
-                where  (categories.name LIKE '%#searchValue#%' OR categories.slug LIKE '%#searchValue#%' OR categories.category_id LIKE '%#searchValue#%')
+                where 
+                categories.name LIKE <cfqueryparam value = '%#searchValue#%' cfsqltype="cf_sql_varchar"/>
+                OR categories.slug LIKE <cfqueryparam value = '%#searchValue#%' cfsqltype="cf_sql_varchar"/>
+                OR categories.category_id LIKE <cfqueryparam value = '%#searchValue#% 'cfsqltype="cf_sql_varchar"/>
         </cfif>
             ORDER BY #orderColumn# #orderDir#
-            LIMIT #start#, #length#
+            LIMIT <cfqueryparam value ='#start#' cfsqltype="cf_sql_integer"/>,
+             <cfqueryparam value = '#length#' cfsqltype="cf_sql_integer"/>
         </cfquery>
         <cfreturn qryCategory>
     </cffunction>
