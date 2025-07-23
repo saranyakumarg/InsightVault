@@ -114,7 +114,7 @@ $(document).ready(function() {
             type:'POST',
             dataType: 'json',
             data:{category_id:category_id},
-            success: function(response) {console.log(response);
+            success: function(response) {
             if(response.success){
                     $('#categoryDeleteModal').modal('hide');
                     showToast("category", "category deleted successfully!","success");
