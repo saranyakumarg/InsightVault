@@ -94,7 +94,6 @@
     }
 
     function deleteCategory(){
-        var result={success:false,"message":""};
         var category_id=form.category_id;
         if(!len(category_id)){
             writeOutput(serializeJSON({"success":false, "message":"category_id is required"}));
@@ -106,17 +105,7 @@
             return;
         }
 
-
-       
-        var deleteQry=queryNew('');
-        var deleteQry=queryExecute(
-            "delete from categories where category_id=?",
-            [
-                {value=category_id,cfsqltype="cf_sql_integer"}
-            ],
-            {datasource=application.datasource}
-        );
-        result.success=true;
+        var deleteResult = variables.categoryModel.deleteCategory(category_id);
          // Audit log for deletion
         var auditAction = "category Deleted By Admin";
         var auditDetails = "category with ID" & category_id & " deleted by admin.";
@@ -130,7 +119,7 @@
         };
         variables.auditLogModel.saveAuditLog(auditData);
 
-        if(result.success){
+        if(deleteResult.success){
             writeOutput(serializeJSON({"success":true,"message":"Category deleted successfully"}));
         }
         else{
