@@ -7,12 +7,15 @@
         <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="categoryForm">
+        <form id="categoryFormElement">
+          <input type="hidden" name="category_id" id="category_id" value="">
             <div class="mb-3">
                 <div class="row mb-3">
                     <label for="name" class="col-sm-2 col-form-label">Name</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="name" name="name">
+                        <div id="validationError" class="invalid-feedback">
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -23,12 +26,12 @@
                     </div>
                 </div>
             </div>
+      </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeBtn" data-coreui-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="liveToastBtn">Confirm</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="liveToastBtn">Confirm</button>
-      </div>
     </div>
   </div>
 </div>
