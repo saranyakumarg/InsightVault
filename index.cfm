@@ -73,6 +73,7 @@
     </cfcase>
     <cfcase value="content-create">
         <cfset variables.title = "Create Content">
+        <cfinclude template="controllers/ContentController.cfm">
         <cfinclude template="views/content/form.cfm">
     </cfcase>
     <cfcase value="content-edit">

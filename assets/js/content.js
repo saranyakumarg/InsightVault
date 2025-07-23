@@ -1,7 +1,11 @@
 // CKEditor configuration
+    let editorInstance;
     ClassicEditor
         .create(document.querySelector('#content'), {
             toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'blockQuote', 'insertTable', 'undo', 'redo']
+        })
+        .then(editor => {
+            editorInstance = editor;
         })
         .catch(error => {
             console.error(error);
@@ -27,7 +31,7 @@
             category: $('select[name="category"]').val(),
             accessLevel: $('select[name="accessLevel"]').val(),
             tags: $('select[name="tags"]').val(),
-            content: $('#content').val()
+            content: editorInstance.getData()
         };
 
         var method = "save-content";
@@ -37,15 +41,16 @@
         }
 
         $.ajax({
-            url: baseURL + 'controllers/AdminUserController.cfm?method=' + method,
+            url: baseURL + 'controllers/ContentController.cfm?method=' + method,
             type: 'POST',
+            "Content-Type": "application/x-www-form-urlencoded",
             data: formData,
             success: function(response) {
                 var jsonResponse = JSON.parse(response); 
                 if (jsonResponse.SUCCESS) {
                     showToast("Content", "Content saved successfully!", "success");
                     setTimeout(function () {
-                        window.location.href = baseURL + '?page=content-list';
+                        window.location.href = baseURL + '?page=content-all';
                     }, 1000);
                 } else {
                     showToast("Content", jsonResponse.message, "danger");
