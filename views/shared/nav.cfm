@@ -30,16 +30,20 @@
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-puzzle"></use>
           </svg> Users</a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=category-all">
+        <cfif session.user.role_id EQ 1 OR session.user.role_id EQ 2>
+        <li class="nav-item"><a class="nav-link"  href="#application.baseURL#?page=category-all">
           <svg class="nav-icon">
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-layers"></use>
           </svg> Categories</a>
         </li>
+         </cfif>
+        <cfif session.user.role_id EQ 1 OR session.user.role_id EQ 2>
         <li class="nav-item"><a class="nav-link" href="#application.baseURL#?page=tag-all">
           <svg class="nav-icon">
             <use xlink:href="assets/coreui/node_modules/@coreui/icons/sprites/free.svg##cil-cursor"></use>
           </svg> Tags</a>
         </li>
+        </cfif>
       </ul>
       <div class="sidebar-footer border-top d-none d-md-flex">     
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>

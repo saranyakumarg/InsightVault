@@ -6,12 +6,13 @@ document.getElementById('name').addEventListener('input', function() {
 
 $(document).ready(function() {
     var baseURL = document.getElementById("appConfig").getAttribute("data-baseurl");
-   
+
     //category List
     $('#categoryTable').DataTable({
         serverSide: true, 
         processing:true, 
         scrollY: "480px", // Set fixed table height
+        order: [[0, 'desc']], //sort by first column in desc order
          ajax: {
             url: baseURL + "controllers/CategoriesController.cfm?method=get-category",
             dataSrc: "data",
@@ -94,7 +95,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete-btn', function () {
         var category_id = $(this).data('id');
         $('#category_id').val(category_id);
-        $('#categorymodalConfirm').off('click').on('click', function() {console.log(1);
+        $('#categorymodalConfirm').off('click').on('click', function() {
                 deleteCategory(category_id);
         });
     })
@@ -107,7 +108,7 @@ $(document).ready(function() {
     
     //delete category
 
-    function deleteCategory(category_id){console.log(2);
+    function deleteCategory(category_id){
         $.ajax({  
             url: baseURL + 'controllers/CategoriesController.cfm?method=delete-category',
             type:'POST',
@@ -115,7 +116,6 @@ $(document).ready(function() {
             data:{category_id:category_id},
             success: function(response) {
             if(response.success){
-                console.log(3);
                     $('#categoryDeleteModal').modal('hide');
                     showToast("category", "category deleted successfully!","success");
                     setTimeout(function () {
@@ -125,7 +125,7 @@ $(document).ready(function() {
                     showToast("User", response.message, "danger");
                 }
             },
-            error: function(xhr, status, error) {console.log(4);
+            error: function(xhr, status, error) {
                 alert("An error occurred while deleting the category: " + error);
             }
         });

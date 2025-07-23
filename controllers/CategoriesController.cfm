@@ -78,6 +78,18 @@
             userData.categoryId=trim(form.categoryId);
         }
         var response=variables.categoryModel.saveCategory(userData);
+
+        var auditAction = "category Created By Admin";
+        var auditDetails = "category " & userData.name & " created";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "categories",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
         writeOutput(serializeJSON(response));
     }
 
@@ -92,7 +104,6 @@
             writeOutput(serializeJSON({"success":false, "message":"category not found"}));
             return;
         }
-
 
         var deleteResult = variables.categoryModel.deleteCategory(category_id);
          // Audit log for deletion
