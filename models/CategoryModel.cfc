@@ -7,18 +7,18 @@
         <cfreturn qryCategory.total>
     </cffunction>
     <cffunction  name="getCategory" access="public" returnType="query">
-        <cfargument  name="draw" type="numeric" required="true">
-        <cfargument  name="start" type="numeric" required="true">
-        <cfargument  name="length" type="numeric" required="true">
+        <cfargument name="draw" type="numeric" required="true">
+        <cfargument name="start" type="numeric" required="true">
+        <cfargument name="length" type="numeric" required="true">
         <cfargument name="searchValue" type="string" required="true">
         <cfargument name="orderColumn" type="string" required="true">
         <cfargument name="orderDir" type="string" required="true">
         <cfargument name="totalRecords" type="any" required="true">
         <cfargument name="category_id" type="numeric" required="true">
         <cfquery name="qryCategory" datasource="#application.datasource#">
-        select categories.category_id,categories.name,categories.slug from categories where 1=1
+        select categories.category_id,categories.name,categories.slug from categories
         <cfif searchValue neq "">
-                AND (categories.name LIKE '%#searchValue#%' OR categories.slug LIKE '%#searchValue#%' OR categories.category_id LIKE '%#searchValue#%')
+                where  (categories.name LIKE '%#searchValue#%' OR categories.slug LIKE '%#searchValue#%' OR categories.category_id LIKE '%#searchValue#%')
         </cfif>
             ORDER BY #orderColumn# #orderDir#
             LIMIT #start#, #length#
@@ -93,7 +93,7 @@
                 <cfset result.message = "Error deleting category: #cfcatch.message#">
             </cfcatch>
         </cftry>
-        <cfoutput>#serializeJSON(result)#</cfoutput>
+        <cfreturn result>
     </cffunction>
 
 </cfcomponent>

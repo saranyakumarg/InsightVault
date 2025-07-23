@@ -5,7 +5,7 @@
 <cfscript>
     //get category model
     variables.categoryModel = createObject("component", application.baseUrl & "models.CategoryModel");
-
+    variables.auditLogModel = createObject("component", application.baseURL & "models.AuditLogModel");
     if(structKeyExists(url, "method")){
         switch(url.method){
             case "get-category":
@@ -82,7 +82,6 @@
     }
 
     function deleteCategory(){
-        var result={success:false,"message":""};
         var category_id=form.category_id;
         if(!len(category_id)){
             writeOutput(serializeJSON({"success":false, "message":"category_id is required"}));
@@ -94,16 +93,22 @@
             return;
         }
 
-        var deleteQry=queryNew('');
-        var deleteQry=queryExecute(
-            "delete from categories where category_id=?",
-            [
-                {value=category_id,cfsqltype="cf_sql_integer"}
-            ],
-            {datasource=application.datasource}
-        );
-        result.success=true;
-        if(result.success){
+
+        var deleteResult = variables.categoryModel.deleteCategory(category_id);
+         // Audit log for deletion
+        var auditAction = "category Deleted By Admin";
+        var auditDetails = "category with ID" & category_id & " deleted by admin.";
+        var auditData = {
+            user_id: session.user.user_id,
+            role_id: session.user.role_id,
+            action: auditAction,
+            entity_type: "categories",
+            access_level_id: session.user.access_level_id,
+            details: auditDetails
+        };
+        variables.auditLogModel.saveAuditLog(auditData);
+
+        if(deleteResult.success){
             writeOutput(serializeJSON({"success":true,"message":"Category deleted successfully"}));
         }
         else{
