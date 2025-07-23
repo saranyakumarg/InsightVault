@@ -32,5 +32,6 @@
     <link href="assets/coreui/node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
     <link href="assets/coreui/node_modules/@coreui/icons/css/free.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
   </head>
   </cfoutput>

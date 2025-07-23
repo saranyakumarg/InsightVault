@@ -7,19 +7,23 @@
         <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="tagForm">
-
-            <div class="mb-3">
-                <label for="tags" class="form-label">Tags</label>
-                <input type="text" class="form-control" id="tags" name="tags" required>
-                <div class="form-text">Type and press comma to create a tag</div>
-            </div>
+        <form id="tagFormElement">
+        <input type="hidden" name="tag_id" id="tag_id" value="">
+          <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
+            <input type="text" class="form-control" id="tags" name="tags" style="display:none;">
+            <input type="text" class="form-control" id="update_tag" name="tags"  style="display:none;">
+            <div id="tag-container"></div>
+            <div id="validationError" class="invalid-feedback"> </div>
+            <span class="badge"></span>
+            <div class="form-text comment">Type and press comma to create a tag</div>
+          </div>
+      </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeBtn" data-coreui-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Confirm</button>
+          </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="liveToastBtn">Confirm</button>
-      </div>
-    </div>
   </div>
 </div>

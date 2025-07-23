@@ -97,7 +97,7 @@
                 <cfset result.message = "Error deleting category: #cfcatch.message#">
             </cfcatch>
         </cftry>
-        <cfoutput>#serializeJSON(result)#</cfoutput>
+        <cfreturn result>
     </cffunction>
 
 </cfcomponent>
