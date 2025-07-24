@@ -1,3 +1,12 @@
+<cfset variables.userModel = createObject("component", application.baseURL & "models.UserModel")>
+<cfset variables.categoryModel = createObject("component", application.baseUrl & "models.CategoryModel")>
+<cfset variables.TagModel=createObject("component",application.baseUrl & "models.TagModel")>
+<cfset userId= session.user.user_id>
+<cfset userCount= variables.userModel.getTotalUserCount(user_id=userId,type="pending")>
+<cfset pendinguserCount=variables.userModel.getTotalUserCount(user_id=userId,type="default")>
+<cfset categoryCount = variables.categoryModel.getTotalCategoryCount()> 
+<cfset tagCount = variables.TagModel.getTotalTagsCount()>
+
 <cfinclude  template="../shared/head.cfm">
   <body>
     <cfinclude  template="../shared/nav.cfm">
@@ -11,10 +20,12 @@
             <div class="col-sm-6 col-xl-3">
               <div class="card text-white bg-primary">
                 <div class="card-body pb-0 d-flex justify-content-between align-items-start">
+              <cfoutput>
                   <div>
-                    <div class="fs-4 fw-semibold"> 26K Users</div>
-                    <div>10 Approval Pending</div>
+                    <div class="fs-4 fw-semibold">#userCount# Users</div>
+                    <div class="fs-4 fw-semibold"> #pendinguserCount#  Approval Pending</div>
                   </div>
+                </cfoutput>
                   <div class="dropdown">
                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <svg class="icon">
@@ -52,8 +63,10 @@
               <div class="card text-white bg-warning">
                 <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                   <div>
-                    <div class="fs-4 fw-semibold">249</div>
+                  <cfoutput>
+                    <div class="fs-4 fw-semibold">#categoryCount#</div>
                     <div>Categories</div>
+                  </cfoutput>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -72,8 +85,10 @@
               <div class="card text-white bg-danger">
                 <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                   <div>
-                    <div class="fs-4 fw-semibold">44000</div>
+                  <cfoutput>
+                    <div class="fs-4 fw-semibold">#tagCount#</div>
                     <div>Tags</div>
+                  </cfoutput>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

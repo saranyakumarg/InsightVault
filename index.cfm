@@ -47,6 +47,7 @@
     <cfcase value="dashboard">
         <cfset variables.title = "Dashboard">
         <cfinclude template="views/dashboard/dashboard.cfm">
+        <cfinclude  template="controllers/DashboardController.cfm">
     </cfcase>
     <cfcase value="users-all">
         <cfset variables.title = "All Users">
