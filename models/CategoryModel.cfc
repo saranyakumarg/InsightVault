@@ -6,6 +6,23 @@
         </cfquery>
         <cfreturn qryCategory.total>
     </cffunction>
+
+    <cffunction  name="getTotalContentCount" access="public" returnType="any">
+        <cfargument  name="type" type="string" required="true">
+        <cfset var status="">
+        <cfif arguments.type eq "pending">
+            <cfset status="draft">
+        <cfelseif arguments.type eq "completed">
+            <cfset status = "published">
+        </cfif>
+        <cfquery name="qryContent" datasource="#application.datasource#">
+            SELECT COUNT(*) as total FROM contents
+                <cfif len(status)>
+                where status = <cfqueryparam value="#status#" cfsqltype="cf_sql_varchar">
+                </cfif>
+        </cfquery>
+        <cfreturn qryContent.total>
+    </cffunction>
     <cffunction  name="getCategory" access="public" returnType="query">
         <cfargument name="draw" type="numeric" required="true">
         <cfargument name="start" type="numeric" required="true">

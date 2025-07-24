@@ -46,6 +46,7 @@
 <cfswitch expression="#variables.route#"> 
     <cfcase value="dashboard">
         <cfset variables.title = "Dashboard">
+        <cfinclude  template="controllers/DashboardController.cfm">
         <cfinclude template="views/dashboard/dashboard.cfm">
     </cfcase>
     <cfcase value="users-all">
