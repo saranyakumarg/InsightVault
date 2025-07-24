@@ -1,11 +1,4 @@
-<cfset variables.userModel = createObject("component", application.baseURL & "models.UserModel")>
-<cfset variables.categoryModel = createObject("component", application.baseUrl & "models.CategoryModel")>
-<cfset variables.TagModel=createObject("component",application.baseUrl & "models.TagModel")>
-<cfset userId= session.user.user_id>
-<cfset userCount= variables.userModel.getTotalUserCount(user_id=userId,type="pending")>
-<cfset pendinguserCount=variables.userModel.getTotalUserCount(user_id=userId,type="default")>
-<cfset categoryCount = variables.categoryModel.getTotalCategoryCount()> 
-<cfset tagCount = variables.TagModel.getTotalTagsCount()>
+
 
 <cfinclude  template="../shared/head.cfm">
   <body>
@@ -43,8 +36,10 @@
               <div class="card text-white bg-info">
                 <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                   <div>
-                    <div class="fs-4 fw-semibold">6200 Contents</div>
-                    <div>5 Approval Pending</div>
+                    <cfoutput>
+                    <div class="fs-4 fw-semibold">#contentCount# Contents</div>
+                    <div>#pendingContentCount# Approval Pending</div>
+                    </cfoutput>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
