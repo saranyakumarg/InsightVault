@@ -9,7 +9,7 @@
     "login", "register", "complete-registration", "set-password", "errors"
 ]>
 <cfset variables.adminRoutes = [
-    "dashboard", "users-all", "user-create", "edit-user", "tag-all", "category-all", "content-all", "content-pending", "content-create", "content-edit", "content", "full-content"
+    "dashboard", "users-all", "user-create", "edit-user", "tag-all", "category-all", "content-all", "content-pending", "content-create", "content-edit", "content", "full-content","audit-Log"
 ]>
 <cfset variables.contributorRoutes = [
     "dashboard", "content-all", "content-pending", "content-create", "content-edit", "content", "full-content"
@@ -110,6 +110,9 @@
     </cfcase>
     <cfcase value="errors">
         <cfinclude template="views/errors/error.cfm">
+    </cfcase>
+    <cfcase value = "audit-Log">
+        <cfinclude  template="views/Logs/auditLog.cfm">
     </cfcase>
     <cfdefaultcase>
         <cfinclude template="views/auth/login.cfm">
