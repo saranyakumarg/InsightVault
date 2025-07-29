@@ -12,9 +12,7 @@
                 
                 <div class="tab-content rounded-bottom">
                   <div class="tab-pane active preview" role="tabpanel" id="preview-1007">
-                    <div class="text-end mb-3">
-                        
-<!---                         <cfinclude  template="form.cfm"> --->
+                    <div class="text-end mb-3">   
                     </div>
                    <table id="LogsTable" class="display table table-striped table-hover">
                       <thead>
@@ -43,5 +41,10 @@
     </div>
     <cfinclude  template="../shared/scripts.cfm">
     <script src="assets/js/logs.js"></script>
+    <script>
+        $(document).ready(function(){
+            viewLog();
+        })
+    </script>
   </body>
 </html>

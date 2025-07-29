@@ -1,4 +1,5 @@
 
+function viewLog(){
 $(document).ready(function(){
     var baseURL = document.getElementById("appConfig").getAttribute("data-baseurl");
     $('#LogsTable').DataTable({
@@ -28,3 +29,4 @@ $(document).ready(function(){
         }
     })
 })
+}

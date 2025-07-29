@@ -164,6 +164,7 @@ $(document).ready(function(){
         $('#tagForm').modal('show');
         $('.form-text.comment').show();
     });
+    
     function deleteTag(tag_id){
         $.ajax({  
             url: baseURL + 'controllers/TagsController.cfm?method=delete-Tag',

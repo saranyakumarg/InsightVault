@@ -9,7 +9,7 @@
     if(structKeyExists(url, "method")){
         switch(url.method){
             case "get-Logs":
-                getTags();
+                getLogs();
                 break;
             default:
                 writeOutput(serializeJSON({"success":false,"message":"unkknown method" &url.method}));
@@ -17,7 +17,7 @@
         }
     }
 
-    function getTags(){
+    function getLogs(){
         var draw = structKeyExists(url, "draw") ? url.draw : 0;
         var start= structKeyExists(url, "start") ? url.start : 0;
         var length=structKeyExists(url, "length") ? url.length : 8;
