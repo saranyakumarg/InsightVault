@@ -133,6 +133,7 @@ $(document).ready(function() {
     //edit category
    $(document).on('click', '.edit-btn', function () {
         const categoryId = $(this).data("id");
+        console.log(categoryId);
         const categoryName=$(this).data("name");
         const categorySlug=$(this).data("slug");
        
