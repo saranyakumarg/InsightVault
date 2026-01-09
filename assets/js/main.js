@@ -121,3 +121,16 @@ function showToast(title, message, type) {
         toastBody.style.color = '#198754';
     }
 }
+    var baseURL = document.getElementById("appConfig").getAttribute("data-baseurl");
+    function logout() {
+        $.ajax({
+            url: baseURL + 'controllers/AuthController.cfm?method=logout',
+            type: 'POST',
+            success: function(response) {
+                window.location.href = baseURL;
+            },
+            error: function(xhr, status, error) {
+                alert('Error logging out: ' + error);
+            }
+        });
+    }
