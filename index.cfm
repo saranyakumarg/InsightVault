@@ -78,6 +78,8 @@
     </cfcase>
     <cfcase value="content-edit">
         <cfset variables.title = "Edit Content">
+        <cfset url.method = "edit-content">
+        <cfinclude template="controllers/ContentController.cfm">
         <cfinclude template="views/content/form.cfm">
     </cfcase>
     <cfcase value="content">

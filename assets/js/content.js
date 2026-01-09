@@ -23,9 +23,10 @@
     // Content Save
     $('#contentForm').on('submit', function(e) {
         e.preventDefault();
-
+        var id = $("#id").length ? $("#id").val() : 0;
         // Gather form data
         var formData = {
+            id: id,
             title: $('#title').val(),
             slug: $('#slug').val(),
             category: $('select[name="category"]').val(),
@@ -35,10 +36,10 @@
         };
 
         var method = "save-content";
-        if ($('input[name="id"]').length) {
-            formData.id = $('input[name="id"]').val();
-            var method = "update-content";
-        }
+        // if ($('input[name="id"]').length) {
+        //     formData.id = $('input[name="id"]').val();
+        //     var method = "update-content";
+        // }
 
         $.ajax({
             url: baseURL + 'controllers/ContentController.cfm?method=' + method,
