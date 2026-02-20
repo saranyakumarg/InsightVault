@@ -53,10 +53,11 @@
 
     function completeRegistration() {
         var userData = variables.userModel.getUserByToken(url.token);
+        var nowTime = createObject("java", "java.time.LocalDateTime").now();
         if (userData.recordCount > 0) {
             if (userData.is_registered == 1) {
                 location(url="?page=errors&status_code=3", addToken=false);
-            } else if (now() > userData.token_expiry) {
+            } else if (nowTime.isAfter(userData.token_expiry)) {
                 location(url="?page=errors&status_code=1", addToken=false);
             } else {
                 location(url="?page=set-password&url.token=#url.token#", addToken=false);
